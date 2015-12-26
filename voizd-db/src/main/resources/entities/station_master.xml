@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the station_master table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="station_master">
+
+  <insert id="insert_station_info" parameterClass="com.voizd.common.beans.vo.StationVO" >
+    insert into station_master(station_name,tag,category,description,location,language,creator_id,created_date,file_id,status,isAdult,hasContent) 
+    values (#stationName#, #tag#, #category#,#description#,#location#,#language#,#creatorId#,now(),#fileId#,#status#,#adult#,#hasContent#)
+    <selectKey resultClass="long" keyProperty="stationId" type="post">
+			SELECT LAST_INSERT_ID()
+	</selectKey>
+  </insert>
+  
+   <select id="get_station_already_ext_creator_id" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+  		select 1 from station_master where creator_id=#creatorId# and station_name=#stationName# and  status!=2 order by station_id desc limit 1
+  </select>
+  
+   <select id="get_station_info"  resultClass="com.voizd.common.beans.vo.StationVO" >
+  	SELECT station_Id as stationId,station_name as stationName,tag,category,description,location,language,created_date as createdDate,creator_id as creatorId,status,file_id as fileId,modified_date as modifiedDate,hasContent,isadult as adult
+	from station_master 
+	where station_id=#stationId#
+  </select>
+  
+    <select id="get_active_station_info"  resultClass="com.voizd.common.beans.vo.StationVO" >
+  	SELECT station_Id as stationId,station_name as stationName,tag,category,description,location,language,created_date as createdDate,creator_id as creatorId,status,file_id as fileId,modified_date as modifiedDate,hasContent,isadult as adult
+	from station_master 
+	where station_id=#stationId# and status=#status#
+  </select>
+
+ <select id="get_recent_station_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StationVO" >
+  	SELECT station_Id as stationId,station_name as stationName, tag,category,description,location,language,created_date as createdDate,creator_id as creatorId,status,file_id as fileId,modified_date as modifiedDate,hasContent,isadult as adult
+	from station_master where status=#status# order by modified_date desc, station_id desc limit #startLimit#,#endLimit#	
+  </select>
+  
+ 
+  <select id="get_my_station_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StationVO" >
+  	SELECT station_Id as stationId,station_name as stationName,tag,category,description,location,language,created_date as createdDate,creator_id as creatorId,status,file_id as fileId,modified_date as modifiedDate,hasContent,isadult as adult
+	from station_master where creator_id=#creatorId# and status!=#status# order by station_name limit #startLimit#,#endLimit#	
+  </select>
+ 
+  <select id="get_user_stations" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StationVO" >
+  	SELECT station_Id as stationId,station_name as stationName
+	from station_master where creator_id=#creatorId# and status!=#status# order by station_name	
+  </select>
+  <update id="update_station_info" parameterClass="com.voizd.dao.entities.Station">
+	 update station_master set tag=#tag#,description=#description#,location=#location#,language=#language#,file_id=#fileId#,station_update_date=now()
+	 where station_id=#stationId#
+  </update>
+  <update id="update_station_status" parameterClass="java.util.Map">
+	 update station_master set status=#status#,hasContent='1',modified_date=now()
+	 where station_id=#stationId#
+  </update>
+  <select id="get_station_detail_by_userid" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StationVO" >
+  	SELECT station_Id as stationId,station_name as stationName,tag,category,description,location,language,created_date as createdDate,creator_id as creatorId,status,file_id as fileId,modified_date as modifiedDate,hasContent,isadult as adult
+	from station_master 
+	where station_id=#stationId# and creator_id=#creatorId# and status!=#status#
+  </select>
+    <update id="update_user_station_status" parameterClass="java.util.Map">
+	 update station_master set status=#status#,hasContent='1',modified_date=now()
+	 where station_id=#stationId# and creator_id=#userId#
+  </update>
+  <select id="get_user_station_by_userid" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StationVO" >
+ 	 SELECT station_Id as stationId,station_name as stationName,tag,category,description,location,language,created_date as createdDate,creator_id as creatorId,status,file_id as fileId,modified_date as modifiedDate,hasContent,isadult as adult
+	from station_master where creator_id=#creatorId# and status=#status# limit 1
+  </select>
+</sqlMap>

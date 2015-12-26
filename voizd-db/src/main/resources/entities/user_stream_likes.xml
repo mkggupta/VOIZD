@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the station_likes table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="user_stream_likes">
+
+  <insert id="insert_user_stream_like_info" parameterClass="java.util.Map">
+    insert user_stream_likes (user_id,stream_id,likes_value,created_date)
+     values (#userId#,#streamId#,#like#,now())
+  </insert>
+  
+  <select id="get_user_stream_like_exists" parameterClass="java.util.Map" resultClass="java.lang.Byte">
+  	SELECT likes_value FROM user_stream_likes where stream_id=#streamId# and user_id=#userId# limit 1
+  </select>
+  
+   <update id="update_user_stream_like_status" parameterClass="java.util.Map">
+	  update user_stream_likes set likes_value=#like#,modified_date=now() where stream_id=#streamId# and user_id=#userId#
+  </update>
+  
+  <select id="user_stream_status_value" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StreamLikeVO">
+  	SELECT likes_value as likeValue ,user_id as userId,stream_id as streamId 
+  	from user_stream_likes 
+  	where stream_id=#streamId# and user_id=#userId# limit 1
+  </select>
+ 
+</sqlMap>

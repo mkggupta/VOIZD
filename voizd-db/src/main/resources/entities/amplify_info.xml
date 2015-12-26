@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Maps the UserProfileMod table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ampify_info">
+
+ 	<insert id="insert_amplify_info" parameterClass="com.voizd.common.beans.vo.AmplifyInfoVO">
+	    insert into amplify_info (content_id,amplifier_id,creator_id,status,time_stamp) 
+	    values (#contentId#,#amplifierId#,#creatorId#,#status#,now())
+  	</insert>
+
+  <update id="update_amplify_info" parameterClass="com.voizd.common.beans.vo.AmplifyInfoVO">
+	 update amplify_info set status=#status#,modified_date=now()
+	 where content_id=#contentId# and amplifier_id=#amplifierId# and status !=#status#
+  </update>
+
+   <select id="get_amplify_info" parameterClass="java.util.Map"  resultClass="com.voizd.common.beans.vo.AmplifyInfoVO" >
+	  	SELECT amplify_id as amplifyId,content_Id as contentId,amplifier_id as amplifierId,creator_id as creatorId,status,time_stamp as amplifyDate
+		from amplify_info where content_id=#contentId# and amplifier_id=#amplifierId#
+  </select>
+  
+   <select id="get_amplifier_info" parameterClass="java.util.Map"  resultClass="com.voizd.common.beans.vo.AmplifyInfoVO" >
+	  	SELECT amplify_id as amplifyId,content_Id as contentId,amplifier_id as amplifierId,creator_id as creatorId,status,time_stamp as amplifyDate
+		from amplify_info where content_Id=#contentId# and status=#status# order by amplify_id desc limit #startLimit#,#endLimit#
+  </select>
+  
+ </sqlMap> 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+  <name>voizd-module</name>
+  <comment>voizd module. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>voizd-common-beans</project>
+    <project>voizd-common-util</project>
+    <project>voizd-core</project>
+    <project>voizd-search</project>
+    <project>voizd-db</project>
+    <project>voizd-framework</project>
+    <project>voizd-mediacommons</project>
+    <project>voizd-tagcloud</project>
+    <project>voizd-geoip</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+    <buildCommand>
+      <name>org.maven.ide.eclipse.maven2Builder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.maven.ide.eclipse.maven2Nature</nature>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

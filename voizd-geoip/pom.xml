@@ -1,0 +1,95 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.voizd</groupId>
+    <artifactId>voizd</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.voizd.geoip</groupId>
+  <artifactId>voizd-geoip</artifactId>
+  <name>voizd-geoip</name>
+  <description>ip to location api</description>
+ 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<wtpversion>1.5</wtpversion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+        		<artifactId>maven-jar-plugin</artifactId>
+        		<version>2.3</version>
+			
+      		</plugin>
+		</plugins>
+		<filters>
+			<filter>src/main/filters/${filterDir}/filter-${env}.properties</filter>
+		</filters>
+
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+			
+		</resources>
+	</build> 
+
+	<profiles>
+		<profile>
+			<id>linux-prod</id>
+			<properties>
+				<filterDir>prod</filterDir>
+				<env>linux-prod</env>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>linux-qa</id>
+			<properties>
+				<filterDir>qa</filterDir>
+				<env>linux-qa</env>
+			</properties>
+		</profile>
+		<profile>
+			<id>linux-dev</id>
+			<properties>
+				<filterDir>dev</filterDir>
+				<env>linux-dev</env>
+			</properties>
+		</profile>
+	</profiles>
+</project>

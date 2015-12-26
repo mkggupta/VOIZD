@@ -1,0 +1,140 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.voizd</groupId>
+    <artifactId>voizd</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.voizd.search</groupId>
+  <artifactId>voizd-search</artifactId>
+  <name>voizd-search</name>
+  <description>voizd search</description>
+
+  <properties>
+		<gson.version>2.2.1</gson.version>
+		<elasticsearch.version>0.20.1</elasticsearch.version>
+		<log4j.version>1.2.16</log4j.version>
+		<httpComponent.version>4.2</httpComponent.version>
+		<httpClient.version>4.2-beta1</httpClient.version>
+		<httpAsyncClient.version>4.0-beta3</httpAsyncClient.version>
+		<commonsLang.version>2.4</commonsLang.version>
+		<slf4j.version>1.5.10</slf4j.version>
+		<guava.version>13.0.1</guava.version>
+        <voizd-path>../voizd/buildtools/src/main/resources/</voizd-path>
+	    <voizd-common-beans>0.0.1-SNAPSHOT</voizd-common-beans>
+		<voizd-common-util>0.0.1-SNAPSHOT</voizd-common-util>
+		<voizd-db>0.0.1-SNAPSHOT</voizd-db>
+	</properties>
+  <dependencies>
+
+  	<dependency>
+  		<groupId>com.voizd.common.beans</groupId>
+  		<artifactId>voizd-common-beans</artifactId>
+  		<version>${voizd-common-beans}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.voizd.common.util</groupId>
+  		<artifactId>voizd-common-util</artifactId>
+  		<version>${voizd-common-util}</version>
+  	</dependency>  	
+  	<dependency>
+  		<groupId>com.voizd.db</groupId>
+  		<artifactId>voizd-db</artifactId>
+  		<version>${voizd-db}</version>
+  	</dependency>
+   
+			<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>provided</scope>
+		</dependency>
+        <dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>${httpComponent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore-nio</artifactId>
+			<version>${httpComponent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpClient.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpasyncclient</artifactId>
+			<version>${httpAsyncClient.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>${elasticsearch.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commonsLang.version}</version>
+		</dependency>
+</dependencies>
+
+<build>
+       <filters>
+			<filter>src/main/filters/${filterDir}/filter-${env}.properties</filter>
+		</filters>
+
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>${voizd-path}</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>linux-prod</id>
+			<properties>
+				<filterDir>prod</filterDir>
+				<env>linux-prod</env>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>linux-qa</id>
+			<properties>
+				<filterDir>prod</filterDir>
+				<env>linux-qa</env>
+			</properties>
+		</profile>
+		<profile>
+			<id>linux-dev</id>
+			<properties>
+				<filterDir>prod</filterDir>
+				<env>linux-dev</env>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>

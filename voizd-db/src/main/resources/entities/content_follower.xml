@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the station_master table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="content_follower">
+
+  <insert id="insert_content_follower_info" parameterClass="java.util.Map">
+    insert into content_follower(content_id,follower_id,time_stamp,stream_id) 
+    values (#contentId#, #follwerId#,now(),#streamId#)
+   
+  </insert>
+  
+   <select id="get_content_follower_info" parameterClass="java.util.Map" resultClass="java.lang.Byte">
+  		select status from content_follower where content_id=#contentId# and follower_id=#follwerId# order by content_id desc limit 1
+  </select>
+  
+   <select id="get_content_follower_info_by_stream" parameterClass="java.util.Map" resultClass="java.lang.Byte">
+  		select status from content_follower where content_id=#contentId# and follower_id=#follwerId# and stream_id=#streamId# order by content_id desc limit 1
+  </select>
+  
+  <update id="update_content_follower_info" parameterClass="java.util.Map">
+	 update content_follower set status=#status#
+	 where content_id=#contentId# and follower_id=#follwerId# and stream_id=#streamId#
+  </update>
+  
+  <select id="get_content_followed_by_me" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentFollowerVO" >
+  	SELECT  id,content_Id as contentId,follower_id as followerId,status
+	from content_follower where follower_id=#follwerId# and status=#status# order by id desc limit #startLimit#,#endLimit#	
+  </select>
+ 
+ 
+
+</sqlMap>

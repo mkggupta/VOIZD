@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the countrylist and languagelist table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="country">
+
+
+  <select id="get_user_country_by_code" parameterClass="java.lang.String" resultClass="java.lang.String">
+  	SELECT country_name FROM country_list where country_code=#code#
+  </select>
+   <select id="get_user_language_by_code" parameterClass="java.lang.String" resultClass="java.lang.String">
+    SELECT language_name FROM language_list where language_code=#code#
+  </select>
+</sqlMap>

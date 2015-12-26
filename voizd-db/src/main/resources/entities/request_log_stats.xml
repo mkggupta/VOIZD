@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Maps the UserProfileMod table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RequestLog">
+	<typeAlias alias="RequestLog" type="com.voizd.dao.entities.RequestLog" />
+
+	<insert id="insert_request_log" parameterClass="RequestLog">
+		INSERT INTO request_log (request_header, request, response, request_type,status, user_id,imei_id,ip,
+		request_date) VALUES (#requestHeader#, #request#, #response#, #requestType#,#status#,#userId#, #imeiId#,#ip#,now());
+	</insert>
+
+</sqlMap> 

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the content_master table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="content_master">
+
+  <insert id="insert_content_info" parameterClass="com.voizd.common.beans.vo.ContentVO">
+    insert into content_master(station_id,tag,title,creator_id,status,time_stamp,content_type,longitude,latitude,location,city,country,state,language,address,tag_cloud,weblink) 
+    values (#stationId#,#tag#,#title#,#creatorId#,#status#,now(),#contentType#,#longitude#,#latitude#,#location#,#city#,#country#,#state#,#language#,#address#,#tagCloud#,#weblink#)
+    <selectKey resultClass="long" keyProperty="contentId" type="post">
+			SELECT LAST_INSERT_ID()
+	</selectKey>
+  </insert>
+  
+  <select id="get_content_info" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where station_id=#stationId# and content_id=#contentId# and status=#status# order by content_id limit 1
+  </select>
+  
+   <select id="get_content_info_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where station_id=#stationId# and status=#status# order by content_id desc limit #endLimit#
+  </select>
+  
+   <select id="get_more_desc_content_info_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where content_id &lt; #contentId# and station_id=#stationId# and status=#status# order by content_id desc limit #endLimit#
+  </select>
+  
+   <select id="get_more_asc_content_info_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where content_id &gt; #contentId# and station_id=#stationId# and status=#status# order by content_id desc limit #endLimit#
+  </select>
+  
+   <select id="get_recent_content_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where status=#status# order by time_stamp desc,content_id desc limit #startLimit#,#endLimit#
+  </select>
+  
+   <select id="get_more_asc_recent_content_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where content_id &gt; #contentId# and status=#status# order by time_stamp desc,content_id desc limit #endLimit#
+  </select>
+  
+   <select id="get_more_desc_recent_content_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType ,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where content_id &lt; #contentId# and status=#status# order by time_stamp desc,content_id desc limit #endLimit#
+  </select>
+  
+  	<select id="get_my_content_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where creator_id=#creatorId# and status!=#status# order by content_id desc limit #startLimit#,#endLimit#
+  </select>
+  
+   <select id="get_more_asc_my_content_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where creator_id=#creatorId# and status!=#status# and content_id &gt; #contentId# order by content_id desc limit #endLimit#
+
+  </select>
+  
+   <select id="get_more_desc_my_content_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where creator_id=#creatorId# and status!=#status# and content_id &lt; #contentId# order by content_id desc limit #endLimit#
+  </select>
+  
+  <select id="get_content_by_id" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where content_id=#contentId# and status=#status#
+  </select>
+  
+  <update id="update_content_tag_info" parameterClass="java.util.Map">
+	 update content_master set tag=#tag#,modified_date=now()
+	 where content_id=#contentId#
+  </update>
+  
+  <update id="update_content_tag_and_picture" parameterClass="java.util.Map">
+	 update content_master set tag=#tag#,modified_date=now()
+	 where content_id=#contentId#
+  </update>
+   <select id="get_content_info_by_content_id" parameterClass="java.lang.Long" resultClass="com.voizd.common.beans.vo.ContentVO" >
+  	SELECT content_id as contentId,station_id as stationId,tag,title,creator_id as creatorId,status,time_stamp as createdDate,
+  	content_type as contentType,longitude,latitude,location,city,country,state,language,weblink
+	from content_master 
+	where content_id=#contentId#
+  </select>
+  <update id="update_content_status_by_content_id"  parameterClass="java.util.Map">
+	 update content_master set status=#status#,modified_date=now()
+	 where content_id=#contentId# and creator_id=#userId# and station_id=#stationId# and status!=#status#
+  </update>
+ <select id="get_recent_content_info_by_status" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.TapClipVO" >
+   SELECT c.content_id as contentId,c.station_id as stationId,c.tag,c.title,c.creator_id as creatorId,c.status,c.time_stamp as createdDate,
+  	c.content_type as contentType ,c.longitude,c.latitude,c.location,c.city,c.country,c.state,c.language,c.weblink
+	FROM content_master c ,station_master s
+	where c.status=#status# and s.status=#status# and s.station_id= c.station_id order by c.content_id desc limit #startLimit#,#endLimit#
+  </select>
+</sqlMap>

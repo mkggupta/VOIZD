@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the comments_has_file table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="comments_has_file">
+
+  <insert id="insert_comment_media_info" parameterClass="com.voizd.dao.entities.CommentMediaInfo">
+    insert into comments_has_file (comment_id,file_id,media_type,ext,size,duration,created_date) 
+    values (#commentId#,#fileId#,#mediaType#,#ext#,#size#,#duration#,now())
+  </insert>
+  <select id="get_comment_media_by_comment_id" parameterClass="java.lang.Long"  resultClass="com.voizd.dao.entities.CommentMediaInfo">
+  		SELECT comment_id as commentId ,file_id as fileId, media_type as mediaType,ext,size,duration,created_date as createdDate FROM comments_has_file 
+  		where  comment_id = #commentId# 
+  </select>
+ 
+</sqlMap>

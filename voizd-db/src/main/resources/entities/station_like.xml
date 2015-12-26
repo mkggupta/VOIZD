@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the station_likes table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="station_likes">
+
+  <insert id="insert_station_like_info" parameterClass="java.util.Map">
+    insert station_likes (user_id,station_id,likes_value,created_date)
+     values (#userId#,#stationId#,#like#,now())
+  </insert>
+  
+  <select id="get_user_station_like_exists" parameterClass="java.util.Map" resultClass="java.lang.Byte">
+  	SELECT likes_value FROM station_likes where station_id=#stationId# and user_id=#userId# limit 1
+  </select>
+  
+   <update id="update_station_like_status" parameterClass="java.util.Map">
+	  update station_likes set likes_value=#like#,modified_date=now() where station_id=#stationId# and user_id=#userId#
+  </update>
+  
+  <select id="user_station_status_value" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StationLikeVO">
+  	SELECT likes_value as likeValue ,user_id as  userId,station_id as stationId 
+  	from station_likes 
+  	where station_id=#stationId# and user_id=#userId# limit 1
+  </select>
+  
+</sqlMap>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:ehcache="http://www.springmodules.org/schema/ehcache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springmodules.org/schema/ehcache
+						http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd">
+	<context:annotation-config />
+	<bean id="serviceFactory" class="com.voizd.dao.service.ContextProvider" />
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${vz.voizd.datasource.url}" />
+		<property name="username" value="${vz.voizd.user}" />
+		<property name="password" value="${vz.voizd.user.pass}" />
+		<property name="initialSize" value="${vz.voizd.initial.connection.size}" />
+		<property name="maxIdle" value="${vz.voizd.maxidle.connection.size}" />
+		<property name="maxActive" value="${vz.voizd.active.connection.size}" />
+		<property name="maxWait" value="${vz.voizd.connection.max.wait}" />
+		<property name="removeAbandoned" value="${vz.voizd.removeAbandoned}" />
+		<property name="logAbandoned" value="${vz.voizd.logAbandoned}" />
+	</bean>
+
+	<bean id="sqlMap" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>classpath:SQLMapConfig.xml</value>
+		</property>
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="slaveDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${vz.voizd.slave.datasource.url}" />
+		<property name="username" value="${vz.voizd.slavedb.user}" />
+		<property name="password" value="${vz.voizd.slavedb.user.pass}" />
+		<property name="initialSize" value="${vz.voizd.slavedb.initial.connection.size}" />
+		<property name="maxIdle" value="${vz.voizd.slavedb.maxidle.connection.size}" />
+		<property name="maxActive" value="${vz.voizd.slavedb.active.connection.size}" />
+		<property name="maxWait" value="${vz.voizd.slave.connection.max.wait}" />
+		<property name="removeAbandoned" value="${vz.voizd.slavedb.removeAbandoned}" />
+		<property name="logAbandoned" value="${vz.voizd.slavedb.logAbandoned}" />
+	</bean>
+	<bean id="slaveSqlMap" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>classpath:SQLMapSlaveConfig.xml</value>
+		</property>
+		<property name="dataSource" ref="slaveDataSource" />
+	</bean>
+
+	<bean id="statsDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${vz.stats.voizd.datasource.url}" />
+		<property name="username" value="${vz.stats.voizd.user}" />
+		<property name="password" value="${vz.stats.voizd.user.pass}" />
+		<property name="initialSize" value="${vz.stats.voizd.initial.connection.size}" />
+		<property name="maxIdle" value="${vz.stats.voizd.maxidle.connection.size}" />
+		<property name="maxActive" value="${vz.stats.voizd.active.connection.size}" />
+		<property name="maxWait" value="${vz.stats.voizd.connection.max.wait}" />
+		<property name="removeAbandoned" value="${vz.stats.voizd.removeAbandoned}" />
+		<property name="logAbandoned" value="${vz.stats.voizd.logAbandoned}" />
+	</bean>
+
+	<bean id="statsSqlMap" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>classpath:StatsSQLMapConfig.xml</value>
+		</property>
+		<property name="dataSource" ref="statsDataSource" />
+	</bean>
+
+	<bean id="statsSlaveDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${vz.stats.voizd.slave.datasource.url}" />
+		<property name="username" value="${vz.stats.voizd.slavedb.user}" />
+		<property name="password" value="${vz.stats.voizd.slavedb.user.pass}" />
+		<property name="initialSize" value="${vz.stats.voizd.slavedb.initial.connection.size}" />
+		<property name="maxIdle" value="${vz.stats.voizd.slavedb.maxidle.connection.size}" />
+		<property name="maxActive" value="${vz.stats.voizd.slavedb.active.connection.size}" />
+		<property name="maxWait" value="${vz.stats.voizd.slave.connection.max.wait}" />
+		<property name="removeAbandoned" value="${vz.stats.voizd.slavedb.removeAbandoned}" />
+		<property name="logAbandoned" value="${vz.stats.voizd.slavedb.logAbandoned}" />
+	</bean>
+	<bean id="statsSlaveSqlMap" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>classpath:StatsSQLMapSlaveConfig.xml</value>
+		</property>
+		<property name="dataSource" ref="statsSlaveDataSource" />
+	</bean>
+	<bean id="requestLogDAO" class="com.voizd.dao.modules.stats.RequestLogDAOImpl">
+		<property name="statsSqlMapClient_" ref="statsSqlMap" />
+		<property name="statsSqlMapClientSlave_" ref="statsSlaveSqlMap" />
+	</bean>
+	<bean id="appClientStatsDAO" class="com.voizd.dao.modules.stats.ClientStatsDAOImpl">
+		<property name="statsSqlMapClient_" ref="statsSqlMap" />
+		<property name="statsSqlMapClientSlave_" ref="statsSlaveSqlMap" />
+	</bean>
+	
+	<bean id="appMediaDAOImpl" class="com.voizd.dao.modules.media.MediaDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appStationDAOImpl" class="com.voizd.dao.modules.station.StationDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appStationCounterDAOImpl" class="com.voizd.dao.modules.stationcounter.StationCounterDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appStationSubDAOImpl" class="com.voizd.dao.modules.station.StationSubDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appContentDAOImpl" class="com.voizd.dao.modules.content.ContentDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appContentSubDAOImpl" class="com.voizd.dao.modules.content.ContentSubDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="com.voizd.dao.modules.media.MediaDAO" class="com.voizd.dao.modules.media.MediaDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+
+	<bean id="authenticationDAO" class="com.voizd.dao.modules.authentication.AuthenticationDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+
+	<bean id="userDAO" class="com.voizd.dao.modules.user.UserDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appStationLikeDAO" class="com.voizd.dao.modules.station.StationLikeDAOImlp">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appContentLikeDAO" class="com.voizd.dao.modules.content.ContentLikeDAOimpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appContentCounterDAOImpl" class="com.voizd.dao.modules.content.ContentCounterDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="com.voizd.dao.modules.search.SearchDAO" class="com.voizd.dao.modules.search.SearchDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appUserStreamDAOImpl" class="com.voizd.dao.modules.stream.UserStreamDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appUserStreamLikeDAOImpl" class="com.voizd.dao.modules.stream.UserStreamLikeDAOImlp">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appUserStreamCounterDAOImpl" class="com.voizd.dao.modules.stream.UserStreamCounterDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appCountryDAOImpl" class="com.voizd.dao.modules.country.CountryDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appUserCounterAOImpl" class="com.voizd.dao.modules.user.UserCounterDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appEarthDAOImpl" class="com.voizd.dao.modules.earth.EarthDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appAdvtDAOImpl" class="com.voizd.dao.modules.advt.AdvtDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	
+	<bean id="com.voizd.dao.modules.mongo.MongoDAO" class="com.voizd.dao.modules.mongo.MongoDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	
+	<bean id="appAmplifyDAO" class="com.voizd.dao.modules.amplify.AmplifyDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appCommentMediaDAOImpl" class="com.voizd.dao.modules.media.CommentMediaDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appCommentDAOImpl" class="com.voizd.dao.modules.comment.CommentDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appCommentCounterDAOImpl" class="com.voizd.dao.modules.comment.CommentCounterDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	<bean id="appPushMessageDAOImpl" class="com.voizd.dao.modules.push.PushMessageDAOImpl">
+		<property name="sqlMapClient_" ref="sqlMap" />
+		<property name="sqlMapClientSlave_" ref="slaveSqlMap" />
+	</bean>
+	
+</beans>

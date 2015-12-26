@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the push_message table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="push_message">
+
+  <insert id="insert_push_message_info" parameterClass="com.voizd.common.beans.vo.PushMessageVO" >
+    insert into push_message(user_id,notif_type,device_key,message,status,last_modified) 
+    values (#userId#,#notifType#,#deviceKey#,#message#,#status#,now())
+  </insert>
+  
+</sqlMap>

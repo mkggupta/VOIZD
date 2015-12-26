@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the station_master table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="station_follower">
+
+  <insert id="insert_station_follower_info" parameterClass="java.util.Map">
+    insert into station_follower(station_id,follower_id,time_stamp,stream_id,followee_id) 
+    values (#stationId#, #follwerId#,now(),#streamId#,#follweeId#)
+  </insert>
+  
+   <select id="get_station_follower_info" parameterClass="java.util.Map" resultClass="java.lang.Byte">
+  		select status from station_follower where station_id=#stationId# and follower_id=#follwerId# order by station_id desc limit 1
+  </select>
+  
+  <select id="get_station_follower_info_by_stream" parameterClass="java.util.Map" resultClass="java.lang.Byte">
+  	 select status from station_follower where station_id=#stationId# and follower_id=#follwerId# and followee_id=#follweeId# and stream_id=#streamId# order by station_id desc limit 1
+  </select>
+  
+  <update id="update_station_follower_info" parameterClass="java.util.Map">
+	 update station_follower set status=#status#
+	 where station_id=#stationId# and follower_id=#follwerId# and followee_id=#follweeId# and stream_id=#streamId#
+  </update>
+  
+  <select id="get_station_followed_by_me" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StationFollowerVO" >
+  	SELECT id,station_Id as stationId,follower_id as followerId,status,followee_id as followeeId
+	from station_follower where follower_id=#follwerId# and status=#status# order by id desc limit #startLimit#,#endLimit#	
+  </select>
+  <select id="get_my_station_follower" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StationFollowerVO" >
+  	SELECT id,station_Id as stationId,follower_id as followerId,status,followee_id as followeeId
+	from station_follower where station_id=#stationId# and followee_id=#follweeId# and status=#status# order by id desc limit #startLimit#,#endLimit#	
+  </select>
+ 
+
+</sqlMap>

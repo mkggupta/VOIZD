@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.voizd</groupId>
+    <artifactId>voizd</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.voizd.modules</groupId>
+  <artifactId>voizd-modules</artifactId>
+  <packaging>pom</packaging>
+  <name>voizd modules</name>
+  <description>voizd modules</description>
+  <properties>
+	<voizd-path>../voizd/buildtools/src/main/resources/</voizd-path>
+  </properties>
+
+  <modules>
+  	<module>voizd-modules-appstats</module>
+	<module>voizd-module</module>
+  </modules>
+
+  <build>
+       <filters>
+			<filter>src/main/filters/${filterDir}/filter-${env}.properties</filter>
+		</filters>
+
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>${voizd-path}</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>linux-prod</id>
+			<properties>
+				<filterDir>prod</filterDir>
+				<env>linux-prod</env>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>linux-qa</id>
+			<properties>
+				<filterDir>prod</filterDir>
+				<env>linux-qa</env>
+			</properties>
+		</profile>
+		<profile>
+			<id>linux-dev</id>
+			<properties>
+				<filterDir>prod</filterDir>
+				<env>linux-dev</env>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>

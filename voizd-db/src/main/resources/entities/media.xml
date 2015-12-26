@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the station_media table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="media">
+
+  <insert id="insert_station_media_info" parameterClass="com.voizd.common.beans.vo.StationMediaVO">
+    insert into station_media (station_id,status,file_id,media_type,ordering,ext,size,time_stamp) 
+    values (#stationId#,#status#,#fileId#,#mediaType#,#ordering#,#ext#,#size#,now())
+  </insert>
+  
+  <select id="get_default_media" parameterClass="java.lang.String"  resultClass="java.lang.String">
+  	select file_id from default_media_file where default_name=#fileName# limit 1
+  </select>
+  
+   <select id="get_default_media_vo" parameterClass="java.lang.String"  resultClass="com.voizd.common.beans.vo.DefaultMediaVO">
+  	select file_id as fileid,ext,media_type as mediaType from default_media_file where file_id=#fileId# limit 1
+  </select>
+  <select id="get_default_media_vo_by_name" parameterClass="java.util.Map"  resultClass="com.voizd.common.beans.vo.DefaultMediaVO">
+  	select file_id as fileid,ext,media_type as mediaType from default_media_file where default_name=#defaultName# and status=#status# limit 1
+  </select>
+  
+   <select id="get_station_media_by_station_id" parameterClass="java.util.Map"  resultClass="com.voizd.common.beans.vo.StationMediaVO">
+  	SELECT station_id as stationId, ordering,status,file_id as fileId,media_type as mediaType,ext,size,time_stamp as timeStamp 
+  	FROM station_media 
+  	where station_id=#stationId# and status=#status# limit 1
+  </select>
+  
+   <select id="get_station_media_list" parameterClass="java.util.Map"  resultClass="com.voizd.common.beans.vo.StationMediaVO">
+  	SELECT station_id as stationId, ordering,status,file_id as fileId,media_type as mediaType,ext,size,time_stamp as timeStamp 
+  	FROM station_media 
+  	where station_id=#stationId# and media_type=#mediaType# and status=#status#
+  </select>
+  
+   <select id="get_station_media_by_file_id" parameterClass="java.lang.String"  resultClass="com.voizd.common.beans.vo.StationMediaVO">
+  	SELECT station_id as stationId, ordering,status,file_id as fileId,media_type as mediaType,ext,size,time_stamp as timeStamp 
+  	FROM station_media 
+  	where file_id=#fileId#
+  </select>
+  
+   <insert id="insert_content_media_info" parameterClass="com.voizd.common.beans.vo.ContentMediaVO">
+    insert into content_media (content_id,status,file_id,media_type,ordering,ext,size,duration,time_stamp) 
+    values (#contentId#,#status#,#fileId#,#mediaType#,#ordering#,#ext#,#size#,#duration#,now())
+  </insert>
+  
+  <select id="get_content_media_info" parameterClass="java.util.Map"  resultClass="com.voizd.common.beans.vo.ContentMediaVO">
+    SELECT id ,content_id as contentId , ordering,status,file_id as fileId,media_type as mediaType,ext,size,time_stamp as createdDate,duration 
+    FROM content_media 
+    where content_id=#contentId# and status=#status#
+  </select>
+  
+  	<select id="get_content_media_list" parameterClass="java.util.Map"  resultClass="com.voizd.common.beans.vo.ContentMediaVO">
+    SELECT id ,content_id as contentId , ordering,status,file_id as fileId,media_type as mediaType,ext,size,time_stamp as createdDate,duration 
+    FROM content_media 
+    where content_id=#contentId# and media_type=#mediaType# and status=#status#
+  </select>
+  
+   <select id="get_content_media_by_file_id" parameterClass="java.lang.String"  resultClass="com.voizd.common.beans.vo.ContentMediaVO">
+    SELECT id ,content_id as contentId , ordering,status,file_id as fileId,media_type as mediaType,ext,size,time_stamp as createdDate,duration 
+    FROM content_media 
+    where file_id=#fileId#
+  </select>
+  <select id="get_all_media_list" resultClass="com.voizd.common.beans.vo.MediaServerVO">
+        select host, port, operation, category, mediaType from media_server
+  </select>
+  <update id="update_station_media_file_status" parameterClass="java.lang.Long">
+	 update station_media set status='2' 
+	 where station_id=#stationId#
+  </update>
+   <insert id="insert_media_master_info" parameterClass="com.voizd.common.beans.vo.MediaMasterVO">
+    insert into media_master (status,file_id,media_type,ext,size,duration,time_stamp) 
+    values (#status#,#fileId#,#mediaType#,#ext#,#size#,#duration#,now())
+  </insert>
+  <select id="get_media_master_info_by_file_id" resultClass="com.voizd.common.beans.vo.MediaMasterVO">
+        select status,file_id as fileId,media_type as mediaType,ext,size,duration,time_stamp as createdDate
+        from media_master
+        where file_id=#fileId#
+  </select>
+   <update id="update_content_media_file_status" parameterClass="java.lang.Long">
+	 update content_media set status='5' 
+	 where content_id=#contentId# and media_type='image'
+  </update>
+  <insert id="insert_stream_media_info" parameterClass="com.voizd.common.beans.vo.StreamMediaVO">
+    insert into stream_media (stream_id,status,file_id,media_type,ordering,ext,size,time_stamp) 
+    values (#streamId#,#status#,#fileId#,#mediaType#,#ordering#,#ext#,#size#,now())
+  </insert>
+  <select id="get_stream_media_by_stream_id" parameterClass="java.util.Map"  resultClass="com.voizd.common.beans.vo.StreamMediaVO">
+  	SELECT stream_id as streamId, ordering,status,file_id as fileId,media_type as mediaType,ext,size,time_stamp as timeStamp 
+  	FROM stream_media where stream_id=#streamId# and status=#status# limit 1
+  </select>
+   <update id="update_stream_media_file_status" parameterClass="java.lang.Long">
+	 update stream_media set status='2'  where stream_id=#streamId#
+  </update>
+  <select id="get_stream_media_by_file_id" parameterClass="java.lang.String"  resultClass="com.voizd.common.beans.vo.StreamMediaVO">
+  		SELECT stream_id as streamId, ordering,status,file_id as fileId,media_type as mediaType,ext,size,time_stamp as timeStamp  
+  		FROM stream_media where file_id=#fileId#
+  </select>
+  <select id="get_media_voice_by_globe_id" parameterClass="java.lang.Integer"  resultClass="com.voizd.dao.entities.MediaVoice">
+  		SELECT status,file_id as fileId,media_type as mediaType,ext,size,duration,globe,time_stamp as createddate FROM earth_voice 
+  		where globe=#globe# order by id desc limit 1
+  </select>
+   <insert id="insert_earth_voice_info" parameterClass="com.voizd.dao.entities.MediaVoice">
+    insert into earth_voice (status,file_id,media_type,ext,size,duration,globe,time_stamp) 
+    values (#status#,#fileId#,#mediaType#,#ext#,#size#,#duration#,#globe#,now())
+  </insert>
+</sqlMap>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Maps the UserProfileMod table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="advt">
+
+  <select id="get_mic_advt_info"  resultClass="com.voizd.common.beans.vo.AdvtMicInfo" >
+  	SELECT advt_code as advtCode,duration,description,file_ids as fileIds,head_line as headLine,tags,click_text as clickText 
+	from advt_mic_info where status=1 order by RAND() limit 1
+  </select>
+
+</sqlMap> 

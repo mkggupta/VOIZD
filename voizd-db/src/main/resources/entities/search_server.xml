@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the elastic_search_server table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="elastic_search_server">
+   <select id="get_search_server_info"  parameterClass="java.lang.String" resultClass="com.voizd.dao.entities.ElasticSearchServer">
+  	select host,port,status from elastic_search_server where status="active"
+  </select>
+ <select id="get_mongo_server_info"  resultClass="com.voizd.common.beans.vo.MongoServer">
+  	select host,port,status from mongo_server where status="active"
+  </select>
+</sqlMap>

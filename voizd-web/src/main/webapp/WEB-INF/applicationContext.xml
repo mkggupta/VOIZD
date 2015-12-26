@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jms="http://www.springframework.org/schema/jms" xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd
+		http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.3.0.xsd">
+
+	<!-- =========== RESOURCE DEFINITIONS START========================= -->
+
+	<context:property-placeholder location="classpath:voizd.properties" ignore-unresolvable="true" />
+	<!-- =========== RESOURCE DEFINITIONS END========================= -->
+
+	<bean id="advtService" class="com.voizd.service.advt.v1_0.AdvtServiceImpl">
+		<property name="advtManager" ref="advtManager" />
+	</bean>
+	<bean id="advtManager" class="com.voizd.service.advt.manager.AdvtManagerImpl">
+		<property name="advtBO" ref="advtBO" />
+	</bean>
+	<bean id="advtBO" class="com.voizd.service.advt.bo.AdvtBOImpl">
+		<property name="advtDAO" ref="appAdvtDAOImpl" />
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+		<property name="mediaService" ref="mediaService" />
+		
+	</bean>
+	
+	
+	<bean id="amplifyService" class="com.voizd.service.amplify.v1_0.AmplifyServiceImpl">
+		<property name="amplifyManager" ref="amplifyManager" />
+	</bean>
+	<bean id="amplifyManager" class="com.voizd.service.amplify.manager.AmplifyManagerImpl">
+		<property name="amplifyActionBO" ref="amplifyActionBO" />
+	</bean>
+	<bean id="amplifyActionBO" class="com.voizd.service.amplify.bo.AmplifyActionBOImpl">
+		<property name="stationSubDAO" ref="appStationSubDAOImpl" />
+		<property name="stationCounterDAO" ref="appStationCounterDAOImpl" />
+		<property name="stationDAO" ref="appStationDAOImpl" />
+		<property name="stationLikeDAO" ref="appStationLikeDAO" />
+		<property name="contentLikeDAO" ref="appContentLikeDAO" />
+		<property name="contentCounterDAO" ref="appContentCounterDAOImpl" />
+		<property name="contentDAO" ref="appContentDAOImpl" />
+		<property name="contentSubDAO" ref="appContentSubDAOImpl" />
+		<property name="userStreamDAO" ref="appUserStreamDAOImpl" />
+		<property name="streamService" ref="streamService" />
+		<property name="userStreamCounterDAO" ref="appUserStreamCounterDAOImpl" />
+		<property name="userStreamLikeDAO" ref="appUserStreamLikeDAOImpl" />
+		<property name="userCounterDAO" ref="appUserCounterAOImpl" />
+		<property name="userDAO" ref="userDAO" />
+		<property name="amplifyDAO" ref="appAmplifyDAO" />
+		<property name="userService" ref="userService" />
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+		<property name="mediaService" ref="mediaService" />
+		<property name="jmsSender" ref="jmsSender" />
+	</bean>
+	
+	<bean id="stationService" class="com.voizd.service.station.v1_0.StationServiceImpl">
+		<property name="stationManager" ref="stationManager" />
+	</bean>
+	<bean id="stationManager" class="com.voizd.service.station.manager.StationManagerImpl">
+		<property name="stationBO" ref="stationBO" />
+	</bean>
+	<bean id="stationBO" class="com.voizd.service.station.bo.StationBOImpl">
+		<property name="stationDAO" ref="appStationDAOImpl" />
+		<property name="stationCounterDAO" ref="appStationCounterDAOImpl" />
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+		<property name="stationSubDAO" ref="appStationSubDAOImpl" />
+		<property name="mediaService" ref="mediaService" />
+		<property name="userService" ref="userService" />
+		<property name="stationLikeDAO" ref="appStationLikeDAO" />
+		<property name="searchBO" ref="searchBO" />
+		<property name="userCounterDAO" ref="appUserCounterAOImpl" />
+	</bean>
+
+
+	<bean id="contentService" class="com.voizd.service.content.v1_0.ContentServiceImpl">
+		<property name="contentManager" ref="contentManager" />
+	</bean>
+	<bean id="contentManager" class="com.voizd.service.content.manager.ContentManagerImpl">
+		<property name="contentBO" ref="contentBO" />
+	</bean>
+	<bean id="contentBO" class="com.voizd.service.content.bo.ContentBOImpl">
+		<property name="stationDAO" ref="appStationDAOImpl" />
+		<property name="contentDAO" ref="appContentDAOImpl" />
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+		<property name="stationCounterDAO" ref="appStationCounterDAOImpl" />
+		<property name="mediaService" ref="mediaService" />
+		<property name="contentCounterDAO" ref="appContentCounterDAOImpl" />
+		<property name="userService" ref="userService" />
+		<property name="contentSubDAO" ref="appContentSubDAOImpl" />
+		<property name="contentLikeDAO" ref="appContentLikeDAO" />
+		<property name="stationSubDAO" ref="appStationSubDAOImpl" />
+		<property name="stationLikeDAO" ref="appStationLikeDAO" />
+		<property name="countryDAO" ref="appCountryDAOImpl" />
+		<property name="searchBO" ref="searchBO" />
+		<property name="userDAO" ref="userDAO" />
+		<property name="tagCloudBO" ref="tagCloudBO" />
+		<property name="jmsSender" ref="jmsSender" />
+		<property name="locationBO" ref="locationBO" />
+		<property name="amplifyDAO" ref="appAmplifyDAO" />
+		<property name="amplifyActionBO" ref="amplifyActionBO" />
+		<property name="commentBO" ref="commentBO" />
+	</bean>
+	
+	<bean id="commentService" class="com.voizd.service.comment.v1_0.CommentServiceImpl">
+		<property name="commentManager" ref="commentManager" />
+	</bean>
+	<bean id="commentManager" class="com.voizd.service.comment.manager.CommentManagerImpl">
+		<property name="commentBO" ref="commentBO" />
+	</bean>
+	<bean id="commentBO" class="com.voizd.service.comment.bo.CommentBOImpl">
+		<property name="mediaService" ref="mediaService" />
+		<property name="contentDAO" ref="appContentDAOImpl" />
+		<property name="userService" ref="userService" />
+		<property name="countryDAO" ref="appCountryDAOImpl" />
+		<property name="jmsSender" ref="jmsSender" />
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+		<property name="commentDAO" ref="appCommentDAOImpl" />
+		<property name="commentMediaDAO" ref="appCommentMediaDAOImpl" />
+		<property name="commentCounterDAO"  ref="appCommentCounterDAOImpl" />
+		<property name="contentCounterDAO"  ref="appContentCounterDAOImpl" />
+		<property name="contentLikeDAO" ref="appContentLikeDAO" />
+	</bean>
+
+	<bean id="userActionService" class="com.voizd.service.user.action.v1_0.UserActionServiceImpl">
+		<property name="userActionManager" ref="userActionManager" />
+	</bean>
+	<bean id="userActionManager" class="com.voizd.service.user.action.manager.UserActionManagerImpl">
+		<property name="userActionBO" ref="userActionBO" />
+	</bean>
+	<bean id="userActionBO" class="com.voizd.service.user.action.bo.UserActionBOImpl">
+		<property name="stationSubDAO" ref="appStationSubDAOImpl" />
+		<property name="stationCounterDAO" ref="appStationCounterDAOImpl" />
+		<property name="stationDAO" ref="appStationDAOImpl" />
+		<property name="stationLikeDAO" ref="appStationLikeDAO" />
+		<property name="contentLikeDAO" ref="appContentLikeDAO" />
+		<property name="contentCounterDAO" ref="appContentCounterDAOImpl" />
+		<property name="contentDAO" ref="appContentDAOImpl" />
+		<property name="contentSubDAO" ref="appContentSubDAOImpl" />
+		<property name="userStreamDAO" ref="appUserStreamDAOImpl" />
+		<property name="streamService" ref="streamService" />
+		<property name="userStreamCounterDAO" ref="appUserStreamCounterDAOImpl" />
+		<property name="userStreamLikeDAO" ref="appUserStreamLikeDAOImpl" />
+		<property name="userCounterDAO" ref="appUserCounterAOImpl" />
+		<property name="userDAO" ref="userDAO" />
+		<property name="jmsSender" ref="jmsSender" />
+		<property name="jmsUtil" ref="jmsUtil" />
+	</bean>
+
+	<bean id="streamService" class="com.voizd.service.stream.v1_0.StreamServiceImpl">
+		<property name="streamManager" ref="streamManager" />
+	</bean>
+	<bean id="streamManager" class="com.voizd.service.stream.manager.StreamManagerImpl">
+		<property name="streamBO" ref="streamBO" />
+	</bean>
+	<bean id="streamBO" class="com.voizd.service.stream.bo.StreamBOImpl">
+		<property name="stationService" ref="stationService" />
+		<property name="contentService" ref="contentService" />
+		<property name="userService" ref="userService" />
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+		<property name="mediaService" ref="mediaService" />
+		<property name="userStreamDAO" ref="appUserStreamDAOImpl" />
+		<property name="userStreamCounterDAO" ref="appUserStreamCounterDAOImpl" />
+	</bean>
+
+
+	<bean id="clientStatService" class="com.voizd.service.stats.v1_0.ClientStatServiceImpl">
+		<property name="clientStatManager" ref="clientStatManager" />
+	</bean>
+	<bean id="clientStatManager" class="com.voizd.service.stats.manager.ClientStatManagerImpl">
+		<property name="clientStatBO" ref="clientStatBO" />
+	</bean>
+	<bean id="clientStatBO" class="com.voizd.service.stats.bo.ClientStatBOImpl">
+		<property name="contentCounterDAO" ref="appContentCounterDAOImpl" />
+		<property name="stationCounterDAO" ref="appStationCounterDAOImpl" />
+		<property name="clientStatsDAO" ref="appClientStatsDAO" />
+		<property name="userStreamDAO" ref="appUserStreamDAOImpl" />
+		<property name="userStreamCounterDAO" ref="appUserStreamCounterDAOImpl" />
+		<property name="contentDAO" ref="appContentDAOImpl" />
+		<property name="commentCounterDAO"  ref="appCommentCounterDAOImpl" />
+	</bean>
+
+	<bean id="userBO" class="com.voizd.service.user.bo.UserBOImpl">
+		<property name="userDAO" ref="userDAO" />
+		<property name="countryDAO" ref="appCountryDAOImpl" />
+		<property name="userCounterDAO" ref="appUserCounterAOImpl" />
+		<property name="authenticationDAO" ref="authenticationDAO" />
+        <property name="authenticationManager" ref="authenticationManager" />
+		<property name="stationBO" ref="stationBO" />
+	</bean>
+	
+	<bean id="userManager" class="com.voizd.service.user.manager.UserManagerImpl">
+		<property name="userBO" ref="userBO" />
+		<property name="stationBO" ref="stationBO" />
+		<property name="mediaService" ref="mediaService" />
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+		<property name="stationSubDAO" ref="appStationSubDAOImpl" />
+		<property name="authenticationBO" ref="authenticationBO" />
+		<property name="jmsSender" ref="jmsSender" />
+	</bean>
+
+	<bean id="userService" class="com.voizd.service.user.v1_0.UserServiceImpl">
+		<property name="userManager" ref="userManager" />
+	</bean>
+
+	<bean id="authenticationBO" class="com.voizd.service.authentication.bo.AuthenticationBOImpl">
+		<property name="authenticationDAO" ref="authenticationDAO" />
+		<property name="userDAO" ref="userDAO" />
+		<property name="countryDAO" ref="appCountryDAOImpl" />
+		<property name="stationDAO" ref="appStationDAOImpl" />	
+		<property name="contentDAO" ref="appContentDAOImpl" />
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+		<property name="tagCloudBO" ref="tagCloudBO" />
+	</bean>
+
+	<bean id="authenticationManager" class="com.voizd.service.authentication.manager.AuthenticationManagerImpl">
+		<property name="authenticationBO" ref="authenticationBO" />
+		<property name="userManager" ref="userManager" />
+		<property name="stationDAO" ref="appStationDAOImpl" />	
+		<property name="searchBO" ref="searchBO" />
+		<property name="contentDAO" ref="appContentDAOImpl" />
+		 <property name="stationBO" ref="stationBO" />
+	</bean>
+
+	<bean id="authenticationService" class="com.voizd.service.authentication.v1_0.AuthenticationServiceImpl">
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
+	<bean id="mediaBO" class="com.voizd.service.media.MediaBOImpl">
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+	</bean>
+
+	<bean id="mediaService" class="com.voizd.service.media.v1_0.MediaServiceImpl">
+		<property name="mediaBO" ref="mediaBO" />
+	</bean>
+
+    <bean id="searchBO" class="com.voizd.service.search.bo.SearchBOImpl">
+		<property name="stationLikeDAO" ref="appStationLikeDAO" />
+		<property name="mediaDAO" ref="appMediaDAOImpl" />
+		<property name="userService" ref="userService" />
+		<property name="stationCounterDAO" ref="appStationCounterDAOImpl" />
+		<property name="stationSubDAO" ref="appStationSubDAOImpl" />
+		<property name="stationDAO" ref="appStationDAOImpl" />	
+		<property name="contentLikeDAO" ref="appContentLikeDAO" />
+		<property name="contentCounterDAO" ref="appContentCounterDAOImpl" />
+		<property name="contentSubDAO" ref="appContentSubDAOImpl" />	
+		<property name="mediaService" ref="mediaService" />
+		<property name="amplifyDAO" ref="appAmplifyDAO" />
+	</bean>
+	
+	<bean id="requestLogBO" class="com.voizd.appstats.core.service.request.bo.RequestLogBOImpl">
+		<property name="requestLogDAO" ref="requestLogDAO" />
+	</bean>
+	<bean id="requestLogManager" class="com.voizd.appstats.core.service.request.manager.RequestLogManagerImpl">
+		<property name="requestLogBO" ref="requestLogBO" />
+	</bean>
+
+	<bean id="requestLogService" class="com.voizd.appstats.core.service.request.v1_0.RequestLogServiceImpl">
+		<property name="requestLogManager" ref="requestLogManager" />
+	</bean>
+	<bean id="searchService" class="com.voizd.service.search.v1_0.SearchServiceImpl">
+		<property name="searchBO" ref="searchBO" />
+	</bean>
+
+      <bean id="earthBO" class="com.voizd.service.earth.bo.EarthBOImpl">
+			  <property name="earthDAO" ref="appEarthDAOImpl" />
+              <property name="mediaDAO" ref="appMediaDAOImpl" />
+              <property name="searchBO" ref="searchBO" />
+			  <property name="mediaService" ref="mediaService" />
+			  <property name="userBO" ref="userBO" />
+	</bean>
+	<bean id="earthManager" class="com.voizd.service.earth.manager.EarthManagerImpl">
+		<property name="earthBO" ref="earthBO" />
+	</bean>	
+       <bean id="earthService" class="com.voizd.service.earth.v1_0.EarthServiceImpl">
+		<property name="earthManager" ref="earthManager" />
+       </bean>
+       
+       <bean id="tagCloudBO" class="com.voizd.service.tagcloud.bo.TagCloudBOImpl">
+			<property name="earthDAO" ref="appEarthDAOImpl" />
+	 </bean>
+	   
+     <bean id="locationBO" class="com.voizd.service.location.bo.LocationBOImpl">	
+	 </bean>
+	 
+       
+       <amq:broker brokerName="voizd" useJmx="true"
+		persistent="false" advisorySupport="false">
+		<amq:destinationPolicy>
+			<amq:policyMap>
+				<amq:policyEntries>
+					<amq:policyEntry queue=">" producerFlowControl="false" >
+					 <amq:pendingQueuePolicy>
+                    <amq:vmQueueCursor/>
+                  	</amq:pendingQueuePolicy>
+                  	</amq:policyEntry>
+				</amq:policyEntries>
+			</amq:policyMap>
+		</amq:destinationPolicy>
+
+		<amq:managementContext>
+			<amq:managementContext createConnector="false"
+				jmxDomainName="embeddedBroker">
+			</amq:managementContext>
+		</amq:managementContext>
+		<amq:networkConnectors>
+			<amq:networkConnector name="first" suppressDuplicateQueueSubscriptions="true" dynamicOnly="false" duplex="false" networkTTL="1000" conduitSubscriptions="false" decreaseNetworkConsumerPriority="true" uri="static:(tcp://192.168.200.116:51515)" userName="voizd" password="voizd" >
+			<amq:staticallyIncludedDestinations>
+			<amq:queue physicalName=">"/>
+			</amq:staticallyIncludedDestinations>
+			</amq:networkConnector>
+			
+		</amq:networkConnectors>
+		<amq:systemUsage>
+			<amq:systemUsage>
+				<amq:memoryUsage>
+					<amq:memoryUsage limit="200 Mb"/>
+				</amq:memoryUsage>
+				<amq:storeUsage>
+				<amq:storeUsage limit="200 Mb" store="#store"/>
+				</amq:storeUsage>
+			</amq:systemUsage>
+		</amq:systemUsage>
+		<amq:transportConnectors>
+			<amq:transportConnector uri="vm://localhost" />
+		</amq:transportConnectors>
+	</amq:broker>
+	
+	<bean id="jmsConnectionfactory" class="org.apache.activemq.pool.PooledConnectionFactory">
+	<property name="connectionFactory">
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+	<property name="brokerURL" value="vm://localhost"/>
+	<property name="useAsyncSend" value="true"/>
+	<property name="copyMessageOnSend" value="false"/>
+	<property name="useCompression" value="true"/>
+	<property name="objectMessageSerializationDefered" value="true"/>
+	<property name="optimizeAcknowledge" value="true"/>
+	<property name="optimizedMessageDispatch" value="true"/>
+	</bean>
+	</property>
+	</bean>
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+	<property name="connectionFactory" ref="jmsConnectionfactory"/>
+	<property name="defaultDestinationName" value="composite.AgentMessaging"/>
+	<property name="deliveryPersistent" value="false"/>
+	<property name="messageTimestampEnabled" value="false"/>
+	<property name="messageIdEnabled" value="false"/>
+	</bean>
+	
+	<bean id="routingAccessor" class="com.voizd.framework.jms.messaging.util.RoutingSlipAccessor">
+	
+	</bean>
+	
+	<bean id="jmsSender" class="com.voizd.framework.jms.messaging.JmsSender">
+	<property name="routingAccessor" ref="routingAccessor"/>
+	<property name="jmsTemplate" ref="jmsTemplate"/>
+	</bean>
+      
+       <bean id="store" class="org.apache.activemq.store.kahadb.KahaDBStore">
+	<property name="enableIndexWriteAsync" value="true"/>
+	</bean>
+	
+	<bean id="jmsUtil" class="com.voizd.util.JmsUtil"/>
+
+</beans>

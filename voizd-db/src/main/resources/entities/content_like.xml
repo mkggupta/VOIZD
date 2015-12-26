@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the content_likes table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="content_likes">
+
+  <insert id="insert_content_like_info" parameterClass="java.util.Map">
+    insert content_likes (user_id,content_id,likes_value,created_date)
+     values (#userId#,#contentId#,#like#,now())
+  </insert>
+  
+  <select id="get_user_content_like_exists" parameterClass="java.util.Map" resultClass="java.lang.Byte">
+  	SELECT likes_value FROM content_likes where content_id=#contentId# and user_id=#userId# limit 1
+  </select>
+   <update id="update_content_like_status" parameterClass="java.util.Map">
+	  update content_likes set likes_value=#like#,modified_date=now() where content_id=#contentId# and user_id=#userId#
+  </update>
+   <select id="get_user_content_like_status" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentLikeVO">
+  	SELECT likes_value as likeValue ,user_id as  userId,content_id as contentId
+    FROM content_likes 
+    where content_id=#contentId# and user_id=#userId#
+  </select>
+  <select id="get_user_liked_content" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentLikeVO" >
+  	SELECT likes_value as likeValue ,user_id as  userId,content_id as contentId
+    FROM content_likes where user_id=#userId# and likes_value=#like# order by content_id desc limit #startLimit#,#endLimit#	
+  </select>
+  
+</sqlMap>

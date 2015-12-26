@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Maps the UserProfileMod table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="stats">
+
+	<insert id="insert_listen_stats" parameterClass="com.voizd.common.beans.vo.StatsVO">
+		INSERT INTO listen_stats (station_id, content_id, user_id, duration,creator_id) 
+		VALUES(#stationId#, #cntId#, #userId#, #duration#,#creatorId#)
+	</insert>
+	
+	<insert id="insert_share_stats" parameterClass="com.voizd.common.beans.vo.StatsVO">
+		INSERT INTO share_stats (operation,station_id, content_id,stream_id, user_id,creator_id,app_id) 
+		VALUES(#op#,#stationId#, #cntId#,#stId#,#userId#,#creatorId#,#appId#)
+	</insert>
+	
+	<insert id="insert_comment_listen_stats" parameterClass="com.voizd.common.beans.vo.StatsVO">
+		INSERT INTO comment_listen_stats (comment_id, user_id, duration,creator_id) 
+		VALUES( #cmtId#, #userId#, #duration#,#creatorId#)
+	</insert>
+
+</sqlMap> 

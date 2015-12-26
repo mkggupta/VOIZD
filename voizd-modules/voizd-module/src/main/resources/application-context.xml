@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:amq="http://activemq.apache.org/schema/core" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+	<context:property-placeholder location="classpath:activemq.properties" ignore-unresolvable="true"/>
+	
+	<import resource="agent-activemq.xml" />
+       <import resource="datamodel-context.xml" />
+
+	<bean id="compositeTemplate" class="org.springframework.jms.core.JmsTemplate">
+	<property name="connectionFactory" ref="hubConnectionPoolFactory"/>
+	<property name="defaultDestinationName" value="composite.AgentMessaging"/>
+	<property name="deliveryPersistent" value="false"/>
+	<property name="messageIdEnabled" value="false"/>
+	<property name="messageTimestampEnabled" value="false"/>
+	</bean>
+	
+	
+	<bean id="tapVoizdListener" class="com.voizd.modules.user.tap.listener.TapVoizdListener">
+                <property name="stationSubDAO" ref="appStationSubDAOImpl" />
+                <property name="stationCounterDAO" ref="appStationCounterDAOImpl" />
+                <property name="amplifyDAO" ref="appAmplifyDAO" />
+                <property name="userCounterDAO" ref="appUserCounterAOImpl" />
+                <property name="contentCounterDAO" ref="appContentCounterDAOImpl" />
+	</bean>
+	
+
+	<bean id="tapVoizdMessageListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="concurrentConsumers" value="15" />
+		<property name="maxConcurrentConsumers" value="75" />
+		<property name="connectionFactory" ref="jmsConnectionPoolFactory" />
+		<property name="destination" ref="tapVoizdDestination" />
+		<property name="messageListener" ref="tapVoizdListener" />
+		<property name="cacheLevelName" value="CACHE_CONNECTION" /> 
+		<property name="recoveryInterval" value="5000" />   
+	</bean>
+	
+	<bean id="amplifyVoizdListener" class="com.voizd.modules.user.amplify.listener.AmplifyVoizdListener">
+ 		 <property name="stationSubDAO" ref="appStationSubDAOImpl" />
+ 		  <property name="stationDAO" ref="appStationDAOImpl" />
+ 		 
+	</bean>
+	
+
+	<bean id="amplifyVoizdMessageListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="concurrentConsumers" value="15" />
+		<property name="maxConcurrentConsumers" value="75" />
+		<property name="connectionFactory" ref="jmsConnectionPoolFactory" />
+		<property name="destination" ref="amplifyVoizdDestination" />
+		<property name="messageListener" ref="amplifyVoizdListener" />
+		<property name="cacheLevelName" value="CACHE_CONNECTION" /> 
+		<property name="recoveryInterval" value="5000" />   
+	</bean>
+	
+	<bean id="pushMessageListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="concurrentConsumers" value="15" />
+		<property name="maxConcurrentConsumers" value="75" />
+		<property name="connectionFactory" ref="jmsConnectionPoolFactory" />
+		<property name="destination" ref="pushDestination" />
+		<property name="messageListener" ref="pushMessageListener" />
+		<property name="cacheLevelName" value="CACHE_CONNECTION" /> 
+		<property name="recoveryInterval" value="5000" />   
+	</bean>
+	
+	<bean id="pushMessageListener" class="com.voizd.modules.push.message.listener.PushMessageListener">
+ 		
+	</bean>
+	
+	<bean id="androidAgent" class="com.voizd.modules.push.message.service.AndroidPushMessageServiceImpl" scope="prototype">
+   
+     </bean>
+    <bean id="iphoneAgent" class="com.voizd.modules.push.message.service.IphonePushMessageServiceImpl" scope="prototype">
+  
+    </bean>
+    <bean id="cutAndmergeManagerReSendTask" class="com.voizd.modules.scheduler.CutAndMergeManagerResendTask">
+          <property name="earthDAO" ref="appEarthDAOImpl" />
+          <property name="mediaDAO" ref="appMediaDAOImpl" />
+	</bean>
+	<bean id="cutAndmergeResendScheduledTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="timerTask" ref="cutAndmergeManagerReSendTask" />
+		<property name="period" value="60000" />
+		<property name="delay" value="60000" />
+	</bean>
+      <!-- 
+    <bean id="timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+				<ref bean="cutAndmergeResendScheduledTask" />
+			</list>
+		</property>
+	</bean>   -->
+    
+</beans>

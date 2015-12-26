@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the content_counter table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="content_counter">
+
+  <insert id="insert_content_counter" parameterClass="java.lang.Long">
+    insert into content_counter (content_id) 
+    values (#contentId#)
+  </insert>
+
+  <update id="update_content_counter" parameterClass="com.voizd.common.beans.vo.ContentCounterVO">
+	 update content_counter set share=#share#,view=#view#,likes=#likes#,
+	 dislikes=#dislikes#,follower=#follower#,comments=#comments#,amplify=#amplify#
+	 where content_id=#contentId#
+  </update>
+
+   <select id="get_content_counter"  resultClass="com.voizd.common.beans.vo.ContentCounterVO" >
+  	SELECT content_Id as contentId,share,view,likes,dislikes,follower,comments,amplify
+	from content_counter 
+	where content_id=#contentId#
+  </select>
+  
+  <select id="get_content_counter_list"  parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentCounterVO" >
+  	SELECT content_Id as contentId,share,view,likes,dislikes,follower,comments,amplify
+	from content_counter order by view desc, content_Id desc limit #startLimit# ,#endLimit#	
+  </select>
+  <select id="get_more_asc_content_counter_list"  parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentCounterVO" >
+  	SELECT content_Id as contentId,share,view,likes,dislikes,follower,comments,amplify
+	from content_counter where content_Id  &gt; #contentId# order by view desc, content_Id desc limit #endLimit#	
+  </select>
+  
+  <select id="get_more_desc_content_counter_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.ContentCounterVO" >
+  	SELECT content_Id as contentId,share,view,likes,dislikes,follower,comments,amplify
+	from content_counter where content_Id  &lt; #contentId# order by view desc, content_Id desc limit #endLimit#	
+  </select>
+  
+</sqlMap>

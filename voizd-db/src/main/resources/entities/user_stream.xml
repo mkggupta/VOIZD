@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the station_master table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="user_stream">
+
+  <insert id="insert_stream_info" parameterClass="com.voizd.common.beans.vo.StreamVO" >
+    insert into user_stream(stream_name,tag,category,description,user_id,created_date,file_id,status,stream_state,hasContent) 
+    values (#streamName#, #tag#, #category#,#description#,#userId#,now(),#fileId#,#status#,#streamState#,#hasContent#)
+    <selectKey resultClass="long" keyProperty="streamId" type="post">
+			SELECT LAST_INSERT_ID()
+	</selectKey>
+  </insert>
+  
+   <select id="get_stream_already_ext_creator_id" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+  		select 1 from user_stream where user_id=#userId# and stream_name=#streamName# and  status!=2 order by stream_id desc limit 1
+  </select>
+  
+   <select id="get_stream_info"  resultClass="com.voizd.common.beans.vo.StreamVO" >
+  	SELECT stream_Id as streamId,stream_name as streamName,tag,category,description,created_date as createdDate,user_id as userId,status,file_id as fileId,modified_date as modifiedDate,hasContent,stream_state as streamState
+	from user_stream 
+	where stream_id=#streamId#
+  </select>
+  
+   <select id="get_active_stream_info"  resultClass="com.voizd.common.beans.vo.StreamVO" >
+  	SELECT stream_Id as streamId,stream_name as streamName,tag,category,description,created_date as createdDate,user_id as userId,status,file_id as fileId,modified_date as modifiedDate,hasContent,stream_state as streamState
+	from user_stream 
+	where stream_id=#streamId# and status=#status#
+  </select>
+
+  <select id="get_my_stream_list" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StreamVO" >
+ 	 SELECT stream_Id as streamId,stream_name as streamName,tag,category,description,created_date as createdDate,user_id as userId,status,file_id as fileId,modified_date as modifiedDate,hasContent,stream_state as streamState
+	 from user_stream  where user_id=#userId# and status!=#status# order by stream_name limit #startLimit#,#endLimit#	
+  </select>
+ 
+  <select id="get_user_streams" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StreamVO" >
+  	SELECT stream_Id as streamId,stream_name as streamName
+	from user_stream where user_id=#userId# and status!=#status# order by stream_name	
+  </select>
+  
+  <update id="update_stream_info" parameterClass="com.voizd.common.beans.vo.StreamVO">
+	 update user_stream set tag=#tag#,description=#description#,file_id=#fileId#,stream_state=#streamState#,modified_date=now()
+	 where stream_id=#streamId#
+  </update>
+  <update id="update_stream_status" parameterClass="java.util.Map">
+	 update user_stream set status=#status#,hasContent=#hasContent#,modified_date=now()
+	 where stream_id=#streamId# and user_id=#userId# and status!=#status#
+  </update>
+  <select id="get_stream_detail_by_userid" parameterClass="java.util.Map" resultClass="com.voizd.common.beans.vo.StreamVO" >
+  	SELECT stream_Id as streamId,stream_name as streamName,tag,category,description,created_date as createdDate,user_id as userId,status,file_id as fileId,modified_date as modifiedDate,hasContent,stream_state as streamState
+	from user_stream 
+	where stream_id=#streamId# and user_id=#userId# and status!=#status#
+  </select>
+  
+</sqlMap>

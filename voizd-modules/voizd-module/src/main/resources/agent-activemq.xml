@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.3.0.xsd 
+http://activemq.apache.org/camel/schema/spring http://activemq.apache.org/camel/schema/spring/camel-spring.xsd">
+	<bean id="deadLetterQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<property name="physicalName" value="Queue.SpringAgentsDLQ" />
+	</bean>
+	<amq:broker brokerName="voizd-agents" persistent="false"
+		useJmx="true" advisorySupport="true" useMirroredQueues="false"
+		useTempMirroredQueues="false">
+		
+		<amq:destinationPolicy>
+			<amq:policyMap>
+				<amq:policyEntries>
+					<amq:policyEntry topic=">" expireMessagesPeriod="30000">
+					<amq:deadLetterStrategy>
+						<amq:sharedDeadLetterStrategy
+								deadLetterQueue="#deadLetterQueue" />
+					</amq:deadLetterStrategy>
+					</amq:policyEntry>
+					<amq:policyEntry queue=">" >
+					<amq:deadLetterStrategy>
+					<amq:sharedDeadLetterStrategy deadLetterQueue="#deadLetterQueue">
+					</amq:sharedDeadLetterStrategy>
+					</amq:deadLetterStrategy>
+					</amq:policyEntry>
+				</amq:policyEntries>
+			</amq:policyMap>
+		</amq:destinationPolicy>
+		<amq:managementContext>
+			<amq:managementContext createConnector="false" />
+		</amq:managementContext>
+		<amq:networkConnectors>
+			<amq:networkConnector networkTTL="1000"
+				conduitSubscriptions="false" decreaseNetworkConsumerPriority="true"
+				duplex="true"
+				uri="${hubconnector.uri}" userName="${hub.user}" password="${hub.password}" destinationFilter="NO_DESTINATION"
+				>
+			<amq:staticallyIncludedDestinations>
+			<amq:queue physicalName="composite.AgentMessaging"/>
+				<amq:queue physicalName="Agent.Tap" />
+			    <amq:queue physicalName="Agent.Amplify" />
+			    <amq:queue physicalName="Agent.Push" />
+			</amq:staticallyIncludedDestinations>
+			</amq:networkConnector>
+		</amq:networkConnectors>
+		<amq:persistenceAdapter>
+			<amq:kahaDB directory="activemq-data/data/kahadb" enableIndexWriteAsync="true"/>
+		</amq:persistenceAdapter>
+		<amq:systemUsage>
+			<amq:systemUsage>
+				<amq:memoryUsage>
+					<amq:memoryUsage limit="2 Gb"/>
+				</amq:memoryUsage>
+				<amq:storeUsage>
+				<amq:storeUsage limit="2 Gb" />
+				</amq:storeUsage>
+			</amq:systemUsage>
+		</amq:systemUsage>
+		<amq:transportConnectors>
+			<amq:transportConnector uri="vm://localhost"
+				name="vm" />
+		</amq:transportConnectors>
+
+	</amq:broker>
+	
+	<bean id="jmsConnectionPoolFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="vm://localhost" />
+	</bean>
+	<bean id="hubConnectionPoolFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
+		<property name="connectionFactory">
+			<bean id="confactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="brokerURL"
+					value="failover:(${master.brokerurl},${slave.brokerurl})?randomize=false" />
+				<property name="userName" value="${hub.user}"/>
+				<property name="password" value="${hub.password}"/>
+			</bean>
+		</property>
+	</bean>
+
+
+	
+	<bean name="tapVoizdDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<property name="physicalName" value="Agent.Tap?consumer.prefetchSize=10" />
+	</bean>
+	<bean name="amplifyVoizdDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<property name="physicalName" value="Agent.Amplify?consumer.prefetchSize=10" />
+	</bean>
+	<bean name="pushDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<property name="physicalName" value="Agent.Push?consumer.prefetchSize=10" />
+	</bean>
+</beans>

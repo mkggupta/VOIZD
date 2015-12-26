@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig
+PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+    <sqlMap resource="entities/search_server.xml"/>
+    <sqlMap resource="entities/content_counter.xml"/>
+	<sqlMap resource="entities/station_like.xml"/>
+    <sqlMap resource="entities/content_like.xml"/>
+	<sqlMap resource="entities/station_master.xml"/>
+	<sqlMap resource="entities/media.xml"/>
+	<sqlMap resource="entities/station_counter.xml"/>
+	<sqlMap resource="entities/station_follower.xml"/>
+	<sqlMap resource="entities/content_master.xml"/>
+	<sqlMap resource="entities/content_follower.xml"/>
+	<sqlMap resource="entities/user.xml"/>
+	<sqlMap resource="entities/user_stream.xml"/>
+	<sqlMap resource="entities/user_stream_counter.xml"/>
+	<sqlMap resource="entities/user_stream_likes.xml"/>
+	<sqlMap resource="entities/country.xml"/>
+	<sqlMap resource="entities/user_counter.xml"/>
+	<sqlMap resource="entities/tags.xml"/>
+	<sqlMap resource="entities/advt.xml"/>
+	<sqlMap resource="entities/amplify_info.xml"/>
+	<sqlMap resource="entities/comment_info.xml"/>
+	<sqlMap resource="entities/comment_media.xml"/>
+	<sqlMap resource="entities/comment_counter.xml"/>
+	<sqlMap resource="entities/push_message.xml"/>
+</sqlMapConfig>

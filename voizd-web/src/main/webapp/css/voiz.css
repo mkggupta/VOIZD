@@ -1,0 +1,25 @@
+@charset "utf-8";
+/* CSS by Abhay Kumar Thakur 20 Dec. 2013 */
+
+
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	background-image: url(../images/background.jpg);
+	background-repeat: repeat;
+	font-family:Helvetica, sans-serif,Verdana, Arial;
+	color:#FFFFFF;
+}
+
+.name:link { color:#3D89BA; text-decoration:none;}
+.name:visited { color:#3D89BA;}
+.name:hover { color:#3D89BA; text-decoration:none;}
+
+
+.hdr1 {color:#FFFFFF; font-size:auto; vertical-align:middle;}
+
+.lang-address { color:#919191;}
+.counter { color:#ffffff;}
+

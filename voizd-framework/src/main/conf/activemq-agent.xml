@@ -1,0 +1,153 @@
+
+	<!--
+		Licensed to the Apache Software Foundation (ASF) under one or more
+		contributor license agreements. See the NOTICE file distributed with
+		this work for additional information regarding copyright ownership.
+		The ASF licenses this file to You under the Apache License, Version
+		2.0 (the "License"); you may not use this file except in compliance
+		with the License. You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+		applicable law or agreed to in writing, software distributed under the
+		License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+		CONDITIONS OF ANY KIND, either express or implied. See the License for
+		the specific language governing permissions and limitations under the
+		License.
+	-->
+	<!--
+		Tune ActiveMQ broker so it can handle large number of queues (tens of
+		thousands) For more information, see:
+		http://activemq.apache.org/how-do-i-configure-10s-of-1000s-of-queues-in-a-single-broker-.html
+
+		Be sure to make necessary changes in your startup script, to 1. Give
+		broker enough memory 2. Disable dedicated task runner e.g.
+		ACTIVEMQ_OPTS="-Xmx1024M
+		-Dorg.apache.activemq.UseDedicatedTaskRunner=false" To run ActiveMQ
+		with this configuration add xbean:conf/activemq-scalability.xml to
+		your command e.g. $ bin/activemq xbean:conf/activemq-scalability.xml
+	-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:amq="http://activemq.apache.org/schema/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.3.2.xsd">
+
+	<!--
+		Allows us to use system properties as variables in this configuration
+		file
+	-->
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+          <value>file:${activemq.base}/conf/vz-credentials.properties</value>
+      </property>      
+  </bean>
+	<bean id="deadLetterQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<property name="physicalName" value="Queue.DLQ" />
+	</bean>
+	<bean id="store" class="org.apache.activemq.store.kahadb.KahaDBStore">
+		<property name="enableIndexWriteAsync" value="true" />
+	</bean>
+	<broker xmlns="http://activemq.apache.org/schema/core"
+		brokerName="CentralHub" useJmx="true"
+		advisorySupport="false" useMirroredQueues="false"
+		useTempMirroredQueues="false" waitForSlave="false" >
+
+		<amq:destinationInterceptors>
+			<amq:virtualDestinationInterceptor>
+				<amq:virtualDestinations>
+					<amq:compositeQueue name="composite.AgentMessaging">
+						<amq:forwardTo>
+									
+							<amq:filteredDestination selector="routingSlip LIKE '%a:tapvoizd%' "
+								queue="Agent.Tap" />
+							  <amq:filteredDestination selector="routingSlip LIKE '%a:amplifyvoizd%' "
+								queue="Agent.Amplify" />
+							<amq:filteredDestination selector="routingSlip LIKE '%' "
+								queue="Queue.RoutingDLQ" />
+						</amq:forwardTo>
+					</amq:compositeQueue>
+				</amq:virtualDestinations>
+			</amq:virtualDestinationInterceptor>
+		</amq:destinationInterceptors>
+
+		<!--
+			Turn on optimizedDispatch For more information, see:
+			http://activemq.apache.org/per-destination-policies.html
+		-->
+		<destinationPolicy>
+			<policyMap>
+				<policyEntries>
+					<policyEntry queue=">" advisdoryForFastProducers="true"
+						advisoryForSlowConsumers="true" advisoryWhenFull="true"
+						sendAdvisoryIfNoConsumers="true" producerFlowControl="true"
+						optimizedDispatch="true" lazyDispatch="true" maxPageSize="1" queuePrefetch="1">
+						<deadLetterStrategy>
+							<sharedDeadLetterStrategy
+								deadLetterQueue="#deadLetterQueue" />
+						</deadLetterStrategy>
+						<amq:dispatchPolicy>
+							<amq:roundRobinDispatchPolicy />
+						</amq:dispatchPolicy>
+						<amq:pendingQueuePolicy>
+							<amq:storeCursor />
+						</amq:pendingQueuePolicy>
+					</policyEntry>
+					<amq:policyEntry topic=">" expireMessagesPeriod="30000">
+					<deadLetterStrategy>
+						<sharedDeadLetterStrategy
+								deadLetterQueue="#deadLetterQueue" />
+					</deadLetterStrategy>
+					</amq:policyEntry>
+				</policyEntries>
+			</policyMap>
+		</destinationPolicy>
+		<destinations>
+			<queue physicalName="Queue.DLQ" />
+		</destinations>
+		<managementContext>
+			<managementContext createConnector="false" />
+		</managementContext>
+
+		<!--
+			Use KahaDB for persistence For more information, see:
+			http://activemq.apache.org/kahadb.html
+		-->
+		<persistenceAdapter>
+			<kahaDB directory="${activemq.base}/data/kahadb"
+				enableIndexWriteAsync="true" ignoreMissingJournalfiles="true" enableJournalDiskSyncs="false"/>		
+              </persistenceAdapter>
+		
+		<amq:plugins>
+		<amq:simpleAuthenticationPlugin>
+		<amq:users>
+			<amq:authenticationUser username="${activemq.admin.username}" password="${activemq.admin.password}" groups="admins,publisher,consumer"/>
+			<amq:authenticationUser username="${activemq.publisher.username}" password="${activemq.publisher.password}" groups="publisher,consumer"/>
+		</amq:users>
+		</amq:simpleAuthenticationPlugin>
+		</amq:plugins>
+
+		<systemUsage>
+			<systemUsage sendFailIfNoSpace="true" sendFailIfNoSpaceExplicitySet="true" >
+				<memoryUsage>
+					<memoryUsage limit="1 gb" />
+				</memoryUsage>
+				<storeUsage>
+					<storeUsage limit="10 gb" />
+				</storeUsage>
+				<tempUsage>
+					<tempUsage limit="100 Mb" />
+				</tempUsage>
+			</systemUsage>
+		</systemUsage>
+
+
+		<!-- 
+			Use NIO transport For more information, see:
+			http://activemq.apache.org/configuring-transports.html#ConfiguringTransports-TheNIOTransport
+		-->
+		<transportConnectors>
+			<transportConnector name="stomp" uri="${stomp.uri}"/>
+			<transportConnector name="openwire" uri="${openwire.uri}"/>
+		</transportConnectors> 
+	</broker>
+	
+</beans>

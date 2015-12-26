@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the station_counter table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="user_user_stream_counter">
+
+  <insert id="insert_user_stream_counter" parameterClass="java.lang.Long">
+    insert into user_stream_counter (stream_id) 
+    values (#streamId#)
+  </insert>
+  <update id="update_user_stream_counter" parameterClass="com.voizd.common.beans.vo.StreamCounterVO">
+	 update user_stream_counter set number_of_content=#numberOfContent#,view=#view#,likes=#likes#,
+	 comments=#comments#,share=#share#
+	 where stream_id=#streamId#
+  </update>
+   <select id="get_user_stream_counter"  resultClass="com.voizd.common.beans.vo.StreamCounterVO" >
+  	SELECT stream_Id as streamId,number_of_content as numberOfContent,view,likes,comments,share
+	from user_stream_counter 
+	where stream_id=#streamId#
+  </select>
+  <select id="get_user_stream_counter_list"  resultClass="com.voizd.common.beans.vo.StreamCounterVO" >
+  	SELECT stream_Id as streamId,number_of_content as numberOfContent,view,likes,comments,share
+	from user_stream_counter where number_of_content>0 order by view desc, stream_Id desc limit #startLimit#,#endLimit#	
+  </select>
+ 
+  
+</sqlMap>

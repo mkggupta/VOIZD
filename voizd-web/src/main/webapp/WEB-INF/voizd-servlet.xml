@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+	<!-- ========================= HANDLER/CONTROLLER MAPPING DEFINITIONS ========================= -->
+	<context:component-scan base-package="com.voizd.rest" />
+
+	<!-- URL based mapping -->
+	<bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+	</bean>
+	<!-- station controller mapping start -->
+	<bean id="stationCreateController" class="com.voizd.rest.controller.station.StationCreateController">
+		<property name="stationService" ref="stationService" />
+	</bean>
+	<bean id="stationController" class="com.voizd.rest.controller.station.StationController">
+		<property name="stationService" ref="stationService" />
+	</bean>
+	<bean id="contentCreateController" class="com.voizd.rest.controller.content.ContentCreateController">
+		<property name="contentService" ref="contentService" />
+	</bean>
+
+	<bean id="contentController" class="com.voizd.rest.controller.content.ContentController">
+		<property name="contentService" ref="contentService" />
+	</bean>
+
+	<bean id="commentController" class="com.voizd.rest.controller.comment.CommentController">
+		<property name="commentService" ref="commentService" />
+	</bean>
+	<bean id="mediaCreateController" class="com.voizd.rest.controller.media.MediaCreateController">
+		<property name="mediaService" ref="mediaService" />
+	</bean>
+	<bean id="userActionController" class="com.voizd.rest.controller.user.UserActionController">
+		<property name="userActionService" ref="userActionService" />
+	</bean>
+
+	<bean id="authenticationController" class="com.voizd.rest.controller.authentication.AuthenticationController">
+		<property name="authenticationService" ref="authenticationService" />
+	</bean>
+
+	<bean id="userController" class="com.voizd.rest.controller.user.UserController">
+		<property name="userService" ref="userService" />
+	</bean>
+
+	<bean id="amplifyController" class="com.voizd.rest.controller.amplify.AmplifyController">
+		<property name="amplifyService" ref="amplifyService" />
+	</bean>
+	<bean id="streamController" class="com.voizd.rest.controller.stream.StreamController">
+		<property name="streamService" ref="streamService" />
+	</bean>
+	<bean id="streamCreateController" class="com.voizd.rest.controller.stream.StreamCreateController">
+		<property name="streamService" ref="streamService" />
+	</bean>
+	
+	<bean id="clientStatsController" class="com.voizd.rest.controller.stats.ClientStatsController">
+		<property name="clientStatService" ref="clientStatService" />
+	</bean>
+	<bean id="searchController" class="com.voizd.rest.controller.search.SearchController">
+		<property name="searchService" ref="searchService" />
+	</bean>
+	<bean id="earthController" class="com.voizd.rest.controller.earth.EarthController">
+		<property name="earthService" ref="earthService" />
+		 <property name="jmsSender" ref="jmsSender" />
+	</bean>
+	<bean id="advtController" class="com.voizd.rest.controller.advt.AdvtController">
+		<property name="advtService" ref="advtService" />
+	</bean>
+	<bean id="pushController" class="com.voizd.rest.controller.push.PushController">
+		<property name="userService" ref="userService" />
+	</bean>
+	<!-- station controller mapping end -->
+	<!-- interceptors -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/api/**/vzpr/**/" />
+			<bean class="com.voizd.interceptor.AuthenticationInterceptor">
+				<property name="requestLogService" ref="requestLogService" />
+				<property name="authenticationService" ref="authenticationService" />
+			</bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/api/**/vzpb/**/" />
+			<bean class="com.voizd.interceptor.PublicAuthenticationInterceptor">
+				<property name="requestLogService" ref="requestLogService" />
+				<property name="authenticationService" ref="authenticationService" />
+			</bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/api/**" />
+			<bean class="com.voizd.interceptor.RequestLoggerInterceptor">
+				<property name="requestLogService" ref="requestLogService" />
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<!-- View Resolver(s) -->
+	<!-- View Resolver(s) -->
+	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="1" />
+	</bean>
+
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="mediaTypes">
+			<map>
+				<entry key="xml" value="application/xml" />
+				<entry key="json" value="application/json" />
+			</map>
+		</property>
+		<property name="favorParameter" value="true" />
+		<property name="parameterName" value="format" />
+		<property name="ignoreAcceptHeader" value="true" />
+		<property name="defaultViews">
+			<list>
+				<bean class="org.springframework.web.servlet.view.xml.MarshallingView" p:modelKey="responseData">
+					<property name="marshaller">
+						<bean class="org.springframework.oxm.xstream.XStreamMarshaller" />
+					</property>
+				</bean>
+				<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+					<property name="renderedAttributes">
+						<list>
+							<value>responseData</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+		<property name="order" value="2" />
+	</bean>
+
+
+
+	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath" value="/WEB-INF/velocity/" />
+		<property name="velocityProperties">
+			<props>
+				<prop key="resource.loader">file</prop>
+				<prop key="file.resource.loader.class">
+					org.apache.velocity.runtime.resource.loader.FileResourceLoader
+				</prop>
+				<prop key="file.resource.loader.cache">true</prop>
+				<prop key="file.resource.loader.modificationCheckInterval">120</prop>
+				<prop key="runtime.log.logsystem.class">org.apache.velocity.runtime.log.SimpleLog4JLogSystem</prop>
+				<prop key="runtime.log.logsystem.log4j.category">org.apache.velocity</prop>
+				<prop key="velocimacro.library">json.vm</prop>
+				<prop key="input.encoding">UTF-8</prop>
+				<prop key="output.encoding">UTF-8</prop>
+				<prop key="default.contentType">application/atom+xml; charset=utf-8</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- View resolvers can also be configured with ResourceBundles or XML files. If you need different view resolving based on Locale, you have to use the resource 
+		bundle resolver. -->
+
+	<bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="cache" value="true" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".vm" />
+		<property name="order" value="3" />
+	</bean>
+	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/pages/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+		<property name="order" value="4" />
+	</bean>
+
+</beans>

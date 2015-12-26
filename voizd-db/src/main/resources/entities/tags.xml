@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the tags table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tags">
+
+  <select id="get_earth_info" parameterClass="java.util.Map"  resultClass="com.voizd.dao.entities.EarthInfo">
+  	SELECT tag_id as tagId,tag_name as tagName,city,state,country,language,counter,created_date as createdDate,file_ids as fileIds, modified_date as modifiedDate FROM tags where country=#country# order by counter desc limit #limit#
+  </select>
+   <select id="get_location_tags" parameterClass="java.util.Map"  resultClass="com.voizd.dao.entities.EarthInfo">
+  		SELECT tag_id as tagId,tag_name as tagName,file_ids as fileIds,counter as contCnt
+  		FROM tags where country=#country# order by counter desc limit #start#,#end#
+  </select>
+  
+   <insert id="insert_tags" parameterClass="com.voizd.dao.entities.EarthInfo">
+    insert into tags(tag_name,city,state,country,language,file_ids,created_date,counter) 
+    values (#tagName#,#city#,#state#,#country#,#language#,#fileIds#,now(),1)
+  </insert>
+   <update id="update_tags" parameterClass="com.voizd.dao.entities.EarthInfo">
+	 update tags set counter=counter+1,file_ids=#fileIds#,modified_date=now()
+	 where tag_name=#tagName# and city=#city# and state=#state# and country= #country# and language=#language#
+  </update>
+  
+   <select id="get_earth_info_by_all_fields" parameterClass="com.voizd.dao.entities.EarthInfo"  resultClass="com.voizd.dao.entities.EarthInfo">
+  	SELECT tag_id as tagId,tag_name as tagName,city,state,country,language,counter,created_date as createdDate,file_ids as fileIds 
+  	FROM tags  where tag_name=#tagName# and city=#city# and state=#state# and country= #country# and language=#language#
+  </select>
+  
+  <select id="get_trending_earth_info_tags" parameterClass="java.util.Map"  resultClass="com.voizd.dao.entities.EarthInfo">
+  	SELECT tag_id as tagId,tag_name as tagName,city,state,country,language,counter,created_date as createdDate,file_ids as fileIds,sum(counter) as contCnt 
+  	FROM tags group by tag_name order by counter desc limit #start#,#end#
+  </select>
+   <select id="get_files_by_location" parameterClass="java.util.Map"  resultClass="java.lang.String">
+  		SELECT file_ids FROM tags where country=#country# order by counter desc limit #start#,#end#
+  </select>
+  
+</sqlMap>

@@ -1,0 +1,25 @@
+<strong>Dear $fname $lname,</strong><br> 
+<br>
+You've entered $email as the contact email address for your VOIZD userID.<br>
+<br>
+To complete the process, we just need to verify that this email address belongs to you.<br>
+<br>
+<strong>Simply click the link below to verify your registration:</strong><br>
+ <br>
+<a href="$verificationUrl">Verify Now </a><br>
+ <br>
+ <br>
+<strong>Confirming your email address will allow you to:</strong> <br>
+- Be a registered user  <br>
+- Create your own 'VOIZD MAP' <br>
+- Post your VOIZES <br>
+- Tap USERS and amplify VOIZES into your stream <br>
+ <br>
+<strong>Wondering why you got this email?</strong> <br>
+It's sent when someone registers with VOIZD.  <br>
+If you didn't do this, don't worry. Your email address cannot be used as a contact address for anywhere without your verification.  <br>
+ <br>
+Thanks, <br>
+ <br>
+<strong>VOIZD Customer Support</strong> <br>
+

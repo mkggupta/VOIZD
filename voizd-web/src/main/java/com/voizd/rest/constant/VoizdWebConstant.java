@@ -1,0 +1,63 @@
+package com.voizd.rest.constant;
+
+public interface VoizdWebConstant {
+	String STATUS = "status";
+	String MESSAGE = "message";
+	String CODE = "code";
+	String STATUS_SUCCESS = "success";
+	String STATUS_ERROR = "error";
+	String STATUS_WARNING = "warning";
+	String STATION = "station";
+
+	String MEDIA_CREATE_ERROR = "Media creation is failed due to some reason.";
+	String STATION_GET_ERROR = "Station list is failed due to some reason.";
+	String NO_STATION = "Currently there is no station.";
+	String TAP_ERROR = "Request is failed due to some reason.";
+	String TAP_SUCCESS = "Successfully done.";
+	String LIKE_SUCCESS = "Successfully done.";
+	String DATA_NOT_UPLOADED = "Data upload parameter are null.";
+	String LIKE_ERROR = "Request is failed due to some reason.";
+	String NO_RESULT_FOUND = "No result found.";
+
+	String DEFAULT_VIEW_NAME = "json";
+	String EMAIL_VERIFICATION_FAILURE_VIEW_NAME = "emailVerificationFailure";
+	String EMAIL_VERIFICATION_SUCCESS_VIEW_NAME = "emailVerificationSuccess";
+	String PASSWORD_CHANGE_FAILURE_VIEW_NAME = "passwordChangeFailure";
+	String PASSWORD_CHANGE_SUCCESS_VIEW_NAME = "passwordChangeSuccess";
+	String RESPONSE = "jsonData";
+	String REQUEST_TYPE = "requesttype";
+	Integer ERROR_CODE = 0;
+	Integer SUCCESS_CODE = 1;
+	Integer ALREADY_EXIST_CODE = 2;
+	Integer DEFAULT_GRID_TAG_COUNT=9;
+	String YES = "1";
+	String STATION_ID = "sId";
+	String STREAM_ID = "stId";
+	Byte DEFAULT_STATION_STATUS = 0;
+	Byte DEFAULT_STREAM_STATUS = 0;
+	Byte DEFAULT_CONTENT_STATUS = 1;
+	Integer DEFAULT_STATION_LIMIT = 10;
+	Integer DEFAULT_CONTENT_LIMIT = 10;
+	Integer DEFAULT_VTAG_LIMIT = 10;
+	Integer DEFAULT_SEARCH_LIMIT = 10;
+	Integer DEFAULT_AMPLIFIER_LIMIT = 10;
+	String voizd_AUTHETICATION_PROPERTY = "authparams";
+	String voizd_AUTHETICATION_IMEI_PARAM = "imei";
+	String voizd_AUTHETICATION_USER_NAME_PARAM = "username";
+	String voizd_AUTHETICATION_AUTHKEY_PARAM = "authkey";
+	String voizd_AUTHETICATION_PASSWORD_PARAM = "password";
+	String voizd_AUTHETICATION_LOGIN_MODE_PARAM = "loginmode";
+	String voizd_AUTHETICATION_PARTNER_USER_KEY_PARAM = "partneruserkey";
+	String voizd_AUTHETICATION_APP_ID_PARAM = "appid";
+	String LOCATION="loc";
+	String TAG="tag";
+	String STARTLIMIT="sLimit";
+	String ENDLIMIT="eLimit";
+	String NEXT="next";
+	String voizd_AUTHETICATION_AUTHKEY = "8be7a063a19fd760850351fcbc43eec9";
+	String ADVT = "advt";
+	String LONG = "long";
+	String LAT = "lat";
+	String ZOOM = "zoom";
+	String LIMIT = "limit ";
+}

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- Maps the UserProfileMod table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="UserInfo">
+	<typeAlias alias="UserInfo" type="com.voizd.dao.entities.UserInfo" />
+	<typeAlias alias="UserAuth" type="com.voizd.dao.entities.UserAuth" />
+	<typeAlias alias="UserThirdPartyAuth" type="com.voizd.dao.entities.UserThirdPartyAuth" />
+	<typeAlias alias="UserEmailVerification" type="com.voizd.dao.entities.UserEmailVerification" />
+	<typeAlias alias="ForgetPasswordVerification" type="com.voizd.dao.entities.ForgetPasswordVerification" />
+    <typeAlias alias="UserPushInfo" type="com.voizd.dao.entities.UserPushInfo" />
+    
+	<insert id="insert_user_info" parameterClass="UserInfo">
+		INSERT INTO user_info (id,first_name, last_name, dob, gender, secondary_email_address, contact_number,
+		profile_pic_file_id,profile_pic_file_ext, contact_address1, contact_address2, zipcode, city, state, country, time_zone, modified_date,language,location,primary_email_address) VALUES (#id#,
+		#firstName#, #lastName#,
+		#dob#, #gender#, #secondaryEmailAddress#, #contactNumber#, #profilePicFileId#,#profilePicFileExt#, #contactAddressLine1#,
+		#contactAddressLine2#, #zipcode#, #city#, #state#,
+		#country#, #timeZone#,now(),#language#,#location#,#primaryEmailAddress#)
+	</insert>
+
+	<update id="update_user_info" parameterClass="UserInfo">
+		UPDATE user_info set first_name =#firstName#, last_name = #lastName#,secondary_email_address =
+		#secondaryEmailAddress#, contact_number=#contactNumber#, profile_pic_file_id=#profilePicFileId#,profile_pic_file_ext = #profilePicFileExt#, contact_address1 =
+		#contactAddressLine1#,
+		contact_address2=#contactAddressLine2#, zipcode = #zipcode#, city = #city#, state = #state#, country = #country#, time_zone =
+		#timeZone#, modified_date=now(),web_site=#webSite#,language=#language#,user_desc=#userDescription#
+		where id=#id#
+	</update>
+
+	<update id="update_user_online_status" parameterClass="java.util.Map">
+		UPDATE user_auth set login_status =#loginStatus#, modified_date=now() where username=#username#
+	</update>
+
+	<update id="update_user_login_params" parameterClass="java.util.Map">
+		UPDATE user_auth set login_status
+		=1,current_client_version=#currentClientVersion#,current_platform=#currentPlatform#,#pushKey#, modified_date=now(),last_login_time=now() where username=#username#
+	</update>
+	
+	<update id="update_user_login_params_by_id" parameterClass="java.util.Map">
+		UPDATE user_auth set login_status
+		=1,current_client_version=#currentClientVersion#,current_platform=#currentPlatform#,pushKey=#pushKey#, modified_date=now(),last_login_time=now() where id=#id#
+	</update>
+
+	<update id="update_user_password" parameterClass="java.util.Map">
+		UPDATE user_auth set password =#password#, modified_date=now() where username=#username#
+	</update>
+
+	<update id="update_user_password_by_id" parameterClass="java.util.Map">
+		UPDATE user_auth set password =#password#, modified_date=now() where id=#id#
+	</update>
+
+	<update id="update_user_status" parameterClass="java.util.Map">
+		UPDATE user_auth set status =#status#, modified_date=now() where id=#id#
+	</update>
+
+	<insert id="insert_user_auth_details" parameterClass="UserAuth">
+		INSERT INTO user_auth (username, password, status, created_date, modified_date,last_login_time, registration_mode,
+		last_login_mode,current_client_version,current_platform,login_status,latitude,longitude,last_location,pushKey) VALUES (#userName#,#password#, #status#, now(), now(), now(),
+		#registrationMode#,#lastLoginMode#,#currentClientVersion#,#currentPlatform#,#loginStatus#,#latitude#,#longitude#,#lastLocation#,#pushKey#);
+		<selectKey resultClass="long" keyProperty="id" type="post">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	<insert id="insert_user_third_party_auth_details" parameterClass="UserThirdPartyAuth">
+		INSERT INTO user_third_party_auth (id, third_party_id, user_key, app_key) VALUES (#id#,
+		#thirdPartyId#, #userKey#, #appKey#)
+	</insert>
+	<select id="get_user_third_party_auth_details" parameterClass="java.util.Map" resultClass="UserThirdPartyAuth">
+		select id,third_party_id as thirdPartyId, user_key as userKey,
+		app_key as appKey from
+		user_third_party_auth where id=#id# and third_party_id=#thirdPartyId#
+	</select>
+	
+	<select id="get_auth_details_by_userkey" parameterClass="java.util.Map" resultClass="UserThirdPartyAuth">
+		select id,third_party_id as thirdPartyId, user_key as userKey,
+		app_key as appKey from
+		user_third_party_auth where user_key=#userKey# and third_party_id=#thirdPartyId#
+	</select>
+	
+	<select id="get_auth_details" parameterClass="java.util.Map" resultClass="UserThirdPartyAuth">
+		select id,third_party_id as thirdPartyId, user_key as userKey,
+		app_key as appKey from
+		user_third_party_auth where user_key=#userKey# and app_key=#appKey# and third_party_id=#thirdPartyId#
+	</select>
+	
+	<select id="get_user_info" parameterClass="java.util.Map" resultClass="UserInfo">
+		select id,first_name as firstName, last_name as lastName, dob,
+		gender,secondary_email_address as secondaryEmailAddress, contact_number as contactNumber,profile_pic_file_id as profilePicFileId,profile_pic_file_ext as
+		profilePicFileExt, contact_address1 as
+		contactAddressLine1, contact_address2 as contactAddressLine2, zipcode, city, state, country, time_zone as timeZone,
+		modified_date as modifiedDate,language,location,web_site as webSite ,user_desc as userDescription,primary_email_address as primaryEmailAddress from
+		user_info where id=#id#
+	</select>
+
+	<select id="get_user_auth_details" parameterClass="java.util.Map" resultClass="UserAuth">
+		select id,username as userName, password, status, created_date as
+		createdDate, modified_date as modifiedDate,last_login_time as lastLoginTime, registration_mode as registrationMode, last_login_mode as
+		lastLoginMode,login_status as loginStatus,current_client_version as currentClientVersion ,current_platform as currentPlatform,latitude,longitude,last_location as lastLocation from user_auth where
+		username=#username#
+	</select>
+	
+	<select id="get_user_auth_details_by_id" parameterClass="java.util.Map" resultClass="UserAuth">
+		select id,username as userName, password, status, created_date as
+		createdDate, modified_date as modifiedDate,last_login_time as lastLoginTime, registration_mode as registrationMode, last_login_mode as
+		lastLoginMode,login_status as loginStatus,current_client_version as currentClientVersion ,current_platform as currentPlatform,latitude,longitude,last_location as lastLocation from user_auth where
+		id=#id#
+	</select>
+	
+	<select id="get_email_verification_details_by_id" parameterClass="java.util.Map" resultClass="UserEmailVerification">
+		select id, user_id as userId,email_id as
+		emailId,verification_code as verificationCode,status,created_date as createdDate, expiry_date as expiryDate From user_email_verification where id=#id#
+	</select>
+	<insert id="insert_email_verification_details" parameterClass="UserEmailVerification">
+		INSERT INTO user_email_verification (user_id
+		,email_id,verification_code,status,created_date ,expiry_date) VALUES
+		(#userId#,#emailId#,#verificationCode#,#status#,now(), #expiryDate#)
+		<selectKey resultClass="long" keyProperty="id" type="post">
+			SELECT LAST_INSERT_ID();
+		</selectKey>
+	
+	</insert>
+
+	<insert id="insert_forget_password_verification_details" parameterClass="ForgetPasswordVerification">
+		INSERT INTO forget_password_verification (user_id,verification_code,created_date ,expiry_date,status) VALUES (#userId#,#verificationCode#,now(),
+		#expiryDate#,0)
+		<selectKey resultClass="long" keyProperty="id" type="post">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+
+	</insert>
+	<update id="update_forget_password_verification_details" parameterClass="java.util.Map">
+		UPDATE forget_password_verification set status =#status# where id=#id#
+	</update>
+	<select id="get_forget_password_verification_details_by_id" parameterClass="java.util.Map" resultClass="ForgetPasswordVerification">
+		select id, user_id as userId,verification_code as
+		verificationCode,created_date as createdDate, expiry_date as expiryDate,status From forget_password_verification where id=#id#
+	</select>
+	<select id="get_user_status_by_id" parameterClass="java.lang.Long" resultClass="java.lang.Integer">
+		select status from user_auth where id=#id#
+	</select>
+	<insert id="insert_user_push_info" parameterClass="UserPushInfo">
+		INSERT INTO user_push_info (user_id,notif_type,device_key,send_notif,modified_date,created_date) VALUES (#userId#,
+		#notifType#, #deviceKey#, #sendNotif#,now(),now())
+	</insert>
+	<update id="update_user_push_message_status" parameterClass="java.util.Map">
+		UPDATE user_push_info set send_notif = #send_notif#,modified_date=now() where user_id=#user_id# 
+	</update>
+	<update id="update_user_push_status_with_push_key" parameterClass="java.util.Map">
+		UPDATE user_push_info set send_notif = #send_notif#,device_key=#pushKey#,notif_type=#platform#,modified_date=now() where user_id=#user_id# 
+	</update>
+	<select id="get_user_push_info" parameterClass="java.lang.Long" resultClass="UserPushInfo">
+		SELECT user_id as userId,device_key as deviceKey,notif_type as notifType,send_notif as sendNotif FROM user_push_info where user_id=#id#
+	</select>
+</sqlMap> 

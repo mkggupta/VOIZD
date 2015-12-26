@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the content_counter table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="user_counter">
+
+  <insert id="insert_user_counter" parameterClass="java.lang.Long">
+    insert into user_counter (user_id) 
+    values (#userId#)
+  </insert>
+
+  <update id="update_user_counter" parameterClass="com.voizd.common.beans.vo.UserCounterVO">
+	 update user_counter set share=#share#,view=#view#,likes=#likes#,
+	 follow=#follow#,comments=#comments#,amplified=#amplified#
+	 where user_id=#userId#
+  </update>
+
+   <select id="get_user_counter"  resultClass="com.voizd.common.beans.vo.UserCounterVO" >
+  	SELECT user_id as userId,share,view,likes,follow,comments,amplified
+	from user_counter 
+	where user_id=#userId#
+  </select>
+  
+  
+  
+</sqlMap>

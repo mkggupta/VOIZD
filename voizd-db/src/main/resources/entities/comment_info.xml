@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the comments table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="comment_info">
+
+  <insert id="insert_comment_info" parameterClass="com.voizd.dao.entities.CommentInfo">
+    insert into comments (content_id,comment_text,commenter_user_id,commenter_name,owner_user_id,status,created_date,weblink)
+     values (#contentId#,#commentText#,#commenterUserId#,#commenterName#,#ownerUserId#,#status#,now(),#weblink#)
+     <selectKey resultClass="long" keyProperty="commentId" type="post">
+			SELECT LAST_INSERT_ID()
+	</selectKey>
+  </insert>
+  <select id="get_comment_info_list_by_content_id" parameterClass="java.util.Map" resultClass="com.voizd.dao.entities.CommentInfo" >
+  	SELECT content_id as contentId ,comment_id as commentId,comment_text as  commentText,commenter_user_id as commenterUserId, commenter_name as commenterName,owner_user_id as ownerUserId,status,created_date as createdDate,weblink
+    FROM comments where content_id=#contentId# and status=1 order by content_id desc limit #sLimit#,#eLimit#	
+  </select>
+   <select id="get_comment_info_by_comment_id" parameterClass="java.lang.Long" resultClass="com.voizd.dao.entities.CommentInfo" >
+    SELECT comment_id as commentId , content_id as contentId ,comment_text as  commentText,commenter_user_id as commenterUserId, commenter_name as commenterName,owner_user_id as ownerUserId,status,created_date as createdDate,weblink
+    FROM comments where comment_id=#commentId# and status=1 
+  </select>
+   <update id="update_comment_status_by_comment_id"  parameterClass="java.util.Map">
+	 update comments set status=#status#,modified_date=now()
+	 where comment_id=#commentId# and commenter_user_id=#userId# and status!=#status#
+  </update>
+  <select id="get_comment_info_by_content_id" parameterClass="java.lang.Long" resultClass="com.voizd.dao.entities.CommentInfo" >
+    SELECT comment_id as commentId , content_id as contentId ,comment_text as  commentText,commenter_user_id as commenterUserId, commenter_name as commenterName,owner_user_id as ownerUserId,status,created_date as createdDate,weblink
+    FROM comments where content_id=#contentId# and status=1 
+  </select>
+  
+</sqlMap>

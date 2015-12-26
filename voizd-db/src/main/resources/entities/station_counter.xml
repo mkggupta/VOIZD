@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--  Maps the station_counter table -->
+<!DOCTYPE sqlMap
+  PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+  "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="station_counter">
+
+  <insert id="insert_station_counter" parameterClass="java.lang.Long">
+    insert into station_counter (station_id) 
+    values (#stationId#)
+  </insert>
+  <update id="update_station_counter" parameterClass="com.voizd.common.beans.vo.StationCounterVO">
+	 update station_counter set number_of_content=#numberOfContent#,view=#view#,likes=#likes#,
+	 dislikes=#dislikes#,follower=#follower#,comments=#comments#,share=#share#
+	 where station_id=#stationId#
+  </update>
+   <select id="get_station_counter"  resultClass="com.voizd.common.beans.vo.StationCounterVO" >
+  	SELECT station_Id as stationId,number_of_content as numberOfContent,view,likes,dislikes,follower,comments,share
+	from station_counter 
+	where station_id=#stationId#
+  </select>
+  <select id="get_station_counter_list"  resultClass="com.voizd.common.beans.vo.StationCounterVO" >
+  	SELECT station_Id as stationId,number_of_content as numberOfContent,view,likes,dislikes,follower,comments,share
+	from station_counter where number_of_content>0 order by view desc, station_Id desc limit #startLimit#,#endLimit#	
+  </select>
+   
+  
+</sqlMap>
